@@ -2,71 +2,170 @@
 #include <stdlib.h>
 #include <locale.h>
 
-// As descriÁıes das funÁıes aqui prototipadas, est„o no final do cÛdigo, junto com as mesmas.
+// As descri√ß√µes das fun√ß√µes aqui prototipadas, est√£o no final do c√≥digo, junto com as mesmas.
 typedef struct pergunta{
 	char enunciado[100];
-	int codEscala;
+	int codEscala;	
 } Pergunta;
+
+typedef struct escala{
+	int codEscala;
+	int qtdItens;
+	char itens[1][10][255];
+} Escala;
 
 void exibirMenu();
 
-void lerPerguntas(FILE *arqPerguntas, char titulo[]);
+int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]);
 
-void lerEscalas(FILE *arqEscalas, char titulo[]);
+int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]);
+
+void separarEscala(Escala escalas[], char stringCompleta[], int nEscala);
 
 int main(){
 	FILE *arq_perguntas, *arq_escalas, *arq_respostas;
-	int menu, controle = 0;
+	int menu, sexo, curso, idade, compativel;
+	int controle = 0, exito_perguntas = 0, exito_escalas = 0, fim_entrevistas = 0;
+	int i = 0, j = 0, k = 0;
 	char titulo_perguntas[100], titulo_escalas[100];
+	Pergunta perguntas[100];
+	Escala escalas[10];
 	
 	setlocale(LC_ALL, "Portuguese");
 	do{
 		do{
 			system("cls");
 			exibirMenu();
-			scanf("%d\n", &menu);
+			scanf("%d", &menu);
+			if (menu < 1 || menu > 4){
+				printf("Escolha uma op√ß√£o v√°lida! \n");
+				system("pause");
+			}
 		} while (menu < 1 || menu > 4);
-		system("pause");
-
+		getchar();
 		switch(menu){
 			case 1:
-				printf("Digite o nome do arquivo das perguntas (utilize a extens„o .txt!");
-				gets(titulo_perguntas);
-				lerPerguntas(arq_perguntas, titulo_perguntas);
+				do {
+					printf("Digite o nome do arquivo das perguntas (utilize a extens√£o .txt)\n");
+					gets(titulo_perguntas);
+					exito_perguntas = lerPerguntas(arq_perguntas, titulo_perguntas, perguntas);
+				} while (exito_perguntas == 0);
 				
-				printf("Digite o nome do arquivo das escalas (utilize a extens„o .txt");
-				gets(titulo_escalas);
-				lerEscalas(arq_escalas, titulo_escalas)
+				do{
+					printf("\nDigite o nome do arquivo das escalas (utilize a extens√£o .txt)\n");
+					gets(titulo_escalas);
+					exito_escalas = lerEscalas(arq_escalas, titulo_escalas, escalas);
+				} while (exito_escalas == 0);
 				break;
 			case 2:
-
+				do{
+					// Colocar o curso aqui;
+					do{
+						printf("\nQual o sexo do participante?\n[1] Masculino \n[2] Feminino\n");
+						scanf("%d", &sexo);
+						if (sexo < 1 || sexo > 2){
+							printf("Selecione uma op√ß√£o v√°lida!");
+							system("pause");
+						}
+					} while (sexo < 1 || sexo > 2);
+					
+					do{
+						printf("\nQual a idade do entrevistado?\n");
+						scanf("%d", &idade);
+						if (idade <= 0){
+							printf("Idade negativa? Digite uma v√°lida!");
+							system("pause");
+						}
+					} while (idade <= 0);
+					
+					for(i = 0; i < exito_perguntas; i++){
+						printf("%d)", i+1);
+						puts(perguntas[i].enunciado);
+						for (j = 0; j < sizeof(escalas); j++){
+							if (escalas[j].codEscala == perguntas[i].codEscala){
+								compativel = j;
+							}
+						}
+						for (j = 0; j < escalas[compativel].qtdItens; j++){
+							printf("[%d]", j+1);
+							puts(escalas[compativel].itens[0][j]);
+							printf("\n");
+						}
+					}
+				} while (fim_entrevistas == 0);
 				break;
 			case 3:
 				
 				break;
 			case 4:
-				
+				exit(1);
 				break;
 		}
 	} while (controle == 0);
 }
 
-// Essa funÁ„o, como o nome diz, exibe as opÁıes do menu.
+// Esta fun√ß√£o, como o nome diz, exibe as op√ß√µes do menu.
 void exibirMenu(){
-	printf("Bem vindo ao Fast Research, escolha a opÁ„o desejada: \n");
-	printf("[1] Preparar Pesquisa\n[2] Aplicar Pesquisa\n[3] Ver resultado\n[4] Sair");
+	printf("Bem vindo ao Fast Research, escolha a op√ß√£o desejada: \n");
+	printf("[1] Preparar Pesquisa\n[2] Aplicar Pesquisa\n[3] Ver resultado\n[4] Sair\n");
 }
 
-// Essa funÁ„o lÍ as perguntas do arquivo
-void lerPerguntas(FILE *arqPerguntas, char titulo[]){
+// Esta fun√ß√£o l√™ as perguntas do arquivo
+int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]){
+	int posicao = 0;
+	printf("Entrou na fun√ß√£o lerPerguntas\n");
 	arqPerguntas = fopen(titulo, "r");
-	while(!feof(arqPErguntas)){
-		fgets(enunciado)
+	if (arqPerguntas == NULL){
+		printf("Erro ao abrir o arquivo! Tente novamente... \n");
+		return 0;
 	}
-	
+	else{
+		while(!feof(arqPerguntas)){
+			fgets(perguntas[posicao].enunciado, 100, arqPerguntas);
+			fscanf(arqPerguntas, "%d\n", &perguntas[posicao].codEscala);
+			posicao++;
+			printf("%d", posicao);
+		}
+		return posicao;
+	}	
 }
 
-// Essa funÁ„o, lÍ as escalas do arquivo
-void lerEscalas(FILE *arqEscalas, char titulo[]){
-	
+// Esta fun√ß√£o, l√™ as escalas do arquivo
+int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]){
+	int posicao = 0;
+	char escalas_agrupadas[100];
+	printf("Entrou na fun√ß√£o lerEscalas\n");
+	arqEscalas = fopen(titulo, "r");
+	if (arqEscalas == NULL){
+		printf("Erro ao abrir o arquivo! Tente novamente... \n");
+		return 0;
+	}
+	else {
+		while(!feof(arqEscalas)){
+			printf("Posi√ß√£o da escala atual: %d", posicao);
+			system("pause");
+			fscanf(arqEscalas, "%d\n", &escalas[posicao].codEscala);
+			fscanf(arqEscalas, "%d\n", &escalas[posicao].qtdItens);
+			fgets(escalas_agrupadas, 100, arqEscalas);
+			separarEscala(escalas, escalas_agrupadas, posicao);
+			posicao++;
+		}
+	}
+}
+
+// Esta fun√ß√£o separa os itens da escala
+void separarEscala(Escala escalas[], char stringCompleta[], int nEscala){
+	int i = 0, j = 0, nItem = 0;
+	while (stringCompleta[i] != 0){
+		if (stringCompleta[i] == ','){
+			escalas[nEscala].itens[0][nItem][j] = 0;
+			j = 0;
+			nItem++;
+		}
+		else{
+			escalas[nEscala].itens[0][nItem][j] = stringCompleta[i];
+			j++;
+		}
+		i++;
+	}
 }
