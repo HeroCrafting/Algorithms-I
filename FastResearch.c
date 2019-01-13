@@ -14,6 +14,13 @@ typedef struct escala{
 	char itens[1][10][255];
 } Escala;
 
+typedef struct participante{
+	char curso[20];
+	char sexo[10];
+	int idade;
+	//int respostas[]
+} Participante;
+
 void exibirMenu();
 
 int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]);
@@ -22,16 +29,20 @@ int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]);
 
 void separarEscala(Escala escalas[], char stringCompleta[], int nEscala);
 
+int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]);
+
 void exibirErro(int resposta, int min, int max);
 
 int main(){
 	FILE *arq_perguntas, *arq_escalas, *arq_respostas;
+	int respostas[1000][100];
 	int menu, sexo, curso, idade, compativel, resposta, limite;
-	int controle = 0, exito_perguntas = 0, exito_escalas = 0, fim_entrevistas = 0;
+	int controle = 0, exito_perguntas = 0, exito_escalas = 0, fim_entrevistas = 0, participante = 0;
 	int i = 0, j = 0, k = 0;
-	char titulo_perguntas[100], titulo_escalas[100];
+	char titulo_perguntas[100], titulo_escalas[100], titulo_respostas[100];
 	Pergunta perguntas[100];
 	Escala escalas[10];
+	Participante participantes[1000];
 	
 	setlocale(LC_ALL, "Portuguese");
 	do{
@@ -45,14 +56,14 @@ int main(){
 		switch(menu){
 			case 1:
 				do {
-					printf("Digite o nome do arquivo das perguntas (utilize a extensão .txt)\n");
+					printf("Digite o nome do arquivo das perguntas (utilize a extensão .txt):\n");
 					gets(titulo_perguntas);
 					// A variável exito_perguntas recebe a quantidade de perguntas lidas
 					exito_perguntas = lerPerguntas(arq_perguntas, titulo_perguntas, perguntas);
 				} while (exito_perguntas == 0);
 				
 				do{
-					printf("\nDigite o nome do arquivo das escalas (utilize a extensão .txt)\n");
+					printf("\nDigite o nome do arquivo das escalas (utilize a extensão .txt):\n");
 					gets(titulo_escalas);
 					// A variável exito_escalas recebe a quantidade de escalas lidas
 					exito_escalas = lerEscalas(arq_escalas, titulo_escalas, escalas);
@@ -66,7 +77,11 @@ int main(){
 						scanf("%d", &sexo);
 						exibirErro(sexo, 1, 2);
 					} while (sexo < 1 || sexo > 2);
-					
+					if (sexo == 1)
+						participantes[participante].sexo = "masculino";
+					else
+						participantes[participante].sexo = "feminino";
+						
 					do{
 						printf("\nQual a idade do entrevistado?\n");
 						scanf("%d", &idade);
@@ -84,26 +99,35 @@ int main(){
 								compativel = j;
 								printf("Encontrou o correspondente, %d \n", compativel+1);
 								printf("Deveria ser: %d \n", perguntas[i].codEscala);
+								j = exito_escalas;
 							}
 						}
 						for (j = 0; j < escalas[compativel].qtdItens; j++){
 							printf("[%d]", j+1);
 							puts(escalas[compativel].itens[0][j]);
-							printf("\n");
+							//printf("\n");
 							// A variável limite guarda a opção máxima, para tratamento de erros
 							limite = j + 1;
 						}
 						do{
 							scanf("%d", &resposta);
-							exibirErro(resposta, 0, limite);
+							exibirErro(resposta, 1, limite);
 						} while (resposta < 0 || resposta > limite);
+						respostas[participante][i] = resposta;
 					}
 					do{
 						printf("Deseja entrevistar outro candidato?\n[1] Sim \n[2] Não\n");
 						scanf("%d\n", &fim_entrevistas);
 						exibirErro(fim_entrevistas, 1, 2);
+						if (fim_entrevistas == 1){
+							// O contador participante, guarda a quantidade de entrevistas realizadas
+							participante++;
+						}
 					} while (fim_entrevistas < 1 || fim_entrevistas > 2);
 				} while (fim_entrevistas == 1);
+				printf("Digite o nome para o arquivo de respostas (utilize a extensão .txt): \n");
+				gets(titulo_respostas);
+				salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante, respostas);
 				break;
 			case 3:
 				
@@ -187,5 +211,26 @@ void exibirErro(int resposta, int min, int max){
 	if (resposta < min || resposta > max){
 		printf("Digite uma resposta válida!\n");
 		system("pause");
+	}
+}
+
+// Esta função, salva a respostas em um arquivo de texto
+int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]){
+	int i = 0, j = 0;
+	arqRespostas = fopen(titulo, "a");
+	if (arqRespostas == NULL){
+		printf("Erro ao abrir o arquivo! Tente novamente. \n");
+		return 0;
+	}
+	else{
+		for(i = 0; i < qtd_participantes; i++){
+			// Aqui vem o printf do curso;
+			fprintf(arqRespostas, "%c\n", participantes[i].sexo);
+			fprintf(arqRespostas, "%d\n", participantes[i].idade);
+			for (j = 0; j < qtd_perguntas; j++){
+				fprintf(arqRespostas, "%d ", respostas[i][j]);
+			}
+		}
+		return i;
 	}
 }
