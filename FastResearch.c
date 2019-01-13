@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <string.h>
 
 // As descrições das funções aqui prototipadas, estão no final do código, junto com as mesmas.
 typedef struct pergunta{
@@ -78,9 +79,9 @@ int main(){
 						exibirErro(sexo, 1, 2);
 					} while (sexo < 1 || sexo > 2);
 					if (sexo == 1)
-						participantes[participante].sexo = "masculino";
+						strcpy(participantes[participante].sexo, "masculino");
 					else
-						participantes[participante].sexo = "feminino";
+						strcpy(participantes[participante].sexo, "feminino");
 						
 					do{
 						printf("\nQual a idade do entrevistado?\n");
@@ -214,7 +215,7 @@ void exibirErro(int resposta, int min, int max){
 	}
 }
 
-// Esta função, salva a respostas em um arquivo de texto
+// Esta função, salva as respostas em um arquivo de texto
 int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]){
 	int i = 0, j = 0;
 	arqRespostas = fopen(titulo, "a");
@@ -225,7 +226,8 @@ int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titul
 	else{
 		for(i = 0; i < qtd_participantes; i++){
 			// Aqui vem o printf do curso;
-			fprintf(arqRespostas, "%c\n", participantes[i].sexo);
+			fputs(participantes[i].sexo, arqRespostas);
+			//fprintf(arqRespostas, "%c\n", participantes[i].sexo);
 			fprintf(arqRespostas, "%d\n", participantes[i].idade);
 			for (j = 0; j < qtd_perguntas; j++){
 				fprintf(arqRespostas, "%d ", respostas[i][j]);
