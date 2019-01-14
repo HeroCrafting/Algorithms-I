@@ -16,7 +16,7 @@ typedef struct escala{
 } Escala;
 
 typedef struct participante{
-	char curso[20];
+	char curso[25];
 	char sexo[10];
 	int idade;
 	//int respostas[]
@@ -28,6 +28,8 @@ int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]);
 
 int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]);
 
+int inicializarCursos(char cursos[][25]);
+
 void separarEscala(Escala escalas[], char stringCompleta[], int nEscala);
 
 int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]);
@@ -38,9 +40,9 @@ int main(){
 	FILE *arq_perguntas, *arq_escalas, *arq_respostas;
 	int respostas[1000][100];
 	int menu, sexo, curso, idade, compativel, resposta, limite;
-	int controle = 0, exito_perguntas = 0, exito_escalas = 0, fim_entrevistas = 0, participante = 0;
+	int controle = 0, exito_perguntas = 0, exito_escalas = 0, qtd_cursos = 0, fim_entrevistas = 0, participante = 0;
 	int i = 0, j = 0, k = 0;
-	char titulo_perguntas[100], titulo_escalas[100], titulo_respostas[100];
+	char titulo_perguntas[100], titulo_escalas[100], titulo_respostas[100], cursos[27][25];
 	Pergunta perguntas[100];
 	Escala escalas[10];
 	Participante participantes[1000];
@@ -69,10 +71,22 @@ int main(){
 					// A variável exito_escalas recebe a quantidade de escalas lidas
 					exito_escalas = lerEscalas(arq_escalas, titulo_escalas, escalas);
 				} while (exito_escalas == 0);
+				// A variável qtd_cursos guarda a quantidade de cursos participantes
+				qtd_cursos = inicializarCursos(cursos);
 				break;
 			case 2:
 				do{
 					// Colocar o curso aqui;
+					do{
+						printf("Selecione o curso do entrevistado: \n");
+						for(i = 0; i < qtd_cursos; i++){
+							printf("[%d] ", i+1);
+							puts(cursos[i]);
+						}
+						scanf("%d", &curso);
+					} while (curso < 1 || curso > qtd_cursos);
+					strcpy(participantes[participante].curso, cursos[curso-1]);
+					
 					do{
 						printf("\nQual o sexo do participante?\n[1] Masculino \n[2] Feminino\n");
 						scanf("%d", &sexo);
@@ -107,7 +121,6 @@ int main(){
 						for (j = 0; j < escalas[compativel].qtdItens; j++){
 							printf("[%d]", j+1);
 							puts(escalas[compativel].itens[0][j]);
-							//printf("\n");
 							// A variável limite guarda a opção máxima, para tratamento de erros
 							limite = j + 1;
 						}
@@ -130,7 +143,6 @@ int main(){
 				getchar();
 				printf("Agora, vamos salvar as respostas.. \n");
 				system("pause");
-				getchar();
 				printf("Digite o nome para o arquivo de respostas (utilize a extensão .txt): \n");
 				gets(titulo_respostas);
 				salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante+1, respostas);
@@ -231,6 +243,8 @@ int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titul
 	else{
 		for(i = 0; i < qtd_participantes; i++){
 			// Aqui vem o printf do curso;
+			fputs(participantes[i].curso, arqRespostas);
+			printf("\n");
 			fputs(participantes[i].sexo, arqRespostas);
 			fprintf(arqRespostas, "%d\n", participantes[i].idade);
 			for (j = 0; j < qtd_perguntas; j++){
@@ -240,4 +254,34 @@ int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titul
 		}
 		return i;
 	}
+}
+
+int inicializarCursos(char cursos[][25]){
+	int finalizado = 0, i = 0, j = 0, selecionado;
+	char lista_cursos[27][25] = {"Administraçao", "Agronomia", "Ciencias Biologicas", "Ciencias Contabeis", "Ciencias Economicas", "Direito",
+	"Educaçao Fisica", "Enfermagem", "Engenharia Civil", "Engenharia de Alimentos", "Engenharia da Computaçao", "Farmacia",
+	"Fisica", "Filosofia", "Geografia", "Historia", "Letras Vernaculas", "Letras c/ Espanhol", "Letras c/ Ingles", 
+	"Letras c/ Frances", "Matematica", "Medicina", "Musica", "Odontologia", "Pedagogia", "Psicologia", "Quimica"};
+	printf("Selecione os cursos que deseja que participem da pesquisa: \n");
+	do{
+		for (i = 0; i < 27; i++){
+			printf("%d)", i + 1);
+			puts(lista_cursos[i]);			
+		}
+		do{
+			scanf("%d", &selecionado);
+			exibirErro(selecionado, 1, 27);
+		} while (selecionado < 1 || selecionado > 27);
+		if(strcmp(lista_cursos[selecionado - 1], "SELECIONADO") != 0){
+			strcpy(cursos[j], lista_cursos[selecionado - 1]);
+			j++;
+			strcpy(lista_cursos[selecionado - 1], "SELECIONADO");
+		}
+		do{
+			printf("Deseja adicionar mais cursos?\n[1] Sim\n[2] Não \n");
+			scanf("%d", &finalizado);
+			exibirErro(finalizado, 1, 2);
+		} while (finalizado < 1 || finalizado > 2);
+	} while (finalizado == 1);
+	return j;
 }
