@@ -79,15 +79,16 @@ int main(){
 						exibirErro(sexo, 1, 2);
 					} while (sexo < 1 || sexo > 2);
 					if (sexo == 1)
-						strcpy(participantes[participante].sexo, "masculino");
+						strcpy(participantes[participante].sexo, "masculino\n");
 					else
-						strcpy(participantes[participante].sexo, "feminino");
+						strcpy(participantes[participante].sexo, "feminino\n");
 						
 					do{
 						printf("\nQual a idade do entrevistado?\n");
 						scanf("%d", &idade);
 						exibirErro(idade, 0, 200);
 					} while (idade <= 0);
+					participantes[participante].idade = idade;
 					
 					for(i = 0; i < exito_perguntas; i++){
 						printf("%d)", i+1);
@@ -118,7 +119,7 @@ int main(){
 					}
 					do{
 						printf("Deseja entrevistar outro candidato?\n[1] Sim \n[2] Não\n");
-						scanf("%d\n", &fim_entrevistas);
+						scanf("%d", &fim_entrevistas);
 						exibirErro(fim_entrevistas, 1, 2);
 						if (fim_entrevistas == 1){
 							// O contador participante, guarda a quantidade de entrevistas realizadas
@@ -126,9 +127,13 @@ int main(){
 						}
 					} while (fim_entrevistas < 1 || fim_entrevistas > 2);
 				} while (fim_entrevistas == 1);
+				getchar();
+				printf("Agora, vamos salvar as respostas.. \n");
+				system("pause");
+				getchar();
 				printf("Digite o nome para o arquivo de respostas (utilize a extensão .txt): \n");
 				gets(titulo_respostas);
-				salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante, respostas);
+				salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante+1, respostas);
 				break;
 			case 3:
 				
@@ -227,11 +232,11 @@ int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titul
 		for(i = 0; i < qtd_participantes; i++){
 			// Aqui vem o printf do curso;
 			fputs(participantes[i].sexo, arqRespostas);
-			//fprintf(arqRespostas, "%c\n", participantes[i].sexo);
 			fprintf(arqRespostas, "%d\n", participantes[i].idade);
 			for (j = 0; j < qtd_perguntas; j++){
 				fprintf(arqRespostas, "%d ", respostas[i][j]);
 			}
+			fprintf(arqRespostas, "\n");
 		}
 		return i;
 	}
