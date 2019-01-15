@@ -28,24 +28,28 @@ int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]);
 
 int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]);
 
+int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], int respostas[][100], int retorno[2]);
+
 int inicializarCursos(char cursos[][25]);
 
 void separarEscala(Escala escalas[], char stringCompleta[], int nEscala);
 
 int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]);
 
+int obterRespostas(char linha[], int respostas[][100], int nParticipante);
+
 void exibirErro(int resposta, int min, int max);
 
 int main(){
-	FILE *arq_perguntas, *arq_escalas, *arq_respostas;
-	int respostas[1000][100];
+	FILE *arq_perguntas, *arq_escalas, *arq_respostas, *arq_resultados;
+	int respostas[1000][100], respostas_arquivo[1000][100], retorno_duplo[2];
 	int menu, sexo, curso, idade, compativel, resposta, limite;
-	int controle = 0, exito_perguntas = 0, exito_escalas = 0, qtd_cursos = 0, fim_entrevistas = 0, participante = 0;
+	int controle = 0, exito_perguntas = 0, exito_escalas = 0, exito_resultados = 0, qtd_cursos = 0, fim_entrevistas = 0, participante = 0;
 	int i = 0, j = 0, k = 0;
-	char titulo_perguntas[100], titulo_escalas[100], titulo_respostas[100], cursos[27][25];
+	char titulo_perguntas[100], titulo_escalas[100], titulo_respostas[100], titulo_resultados[100], cursos[27][25];
 	Pergunta perguntas[100];
 	Escala escalas[10];
-	Participante participantes[1000];
+	Participante participantes[1000], resultados[1000];
 	
 	setlocale(LC_ALL, "Portuguese");
 	do{
@@ -148,7 +152,20 @@ int main(){
 				salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante+1, respostas);
 				break;
 			case 3:
-				
+				printf("Qual o nome do arquivo de respostas, que você deseja consultar? (utilize a extensão .txt)\n");
+				gets(titulo_resultados);
+				// A variável exito_resultados recebe a quantidade de entrevistados no arquivo
+				exito_resultados = lerResultados(arq_resultados, titulo_resultados, resultados, respostas_arquivo, retorno_duplo);
+				printf("Obtido respostas de %d participantes! \n", exito_resultados);
+				system("pause");
+				printf("1 = %d\n0 = %d\n", retorno_duplo[1], retorno_duplo[0]);
+				for (i = 0; i < retorno_duplo[0]; i++){
+					printf("\nEntrevistado %d\n", i + 1);
+					for (j = 0; j < retorno_duplo[1]; j++){
+						printf("%d ", respostas_arquivo[i][j]);
+					}
+				}
+				system("pause");
 				break;
 			case 4:
 				exit(1);
@@ -160,7 +177,7 @@ int main(){
 // Este procedimento, como o nome diz, exibe as opções do menu.
 void exibirMenu(){
 	printf("Bem vindo ao Fast Research, escolha a opção desejada: \n");
-	printf("[1] Preparar Pesquisa\n[2] Aplicar Pesquisa\n[3] Ver resultado\n[4] Sair\n");
+	printf("[1] Preparar Pesquisa\n[2] Aplicar Pesquisa\n[3] Ver resultados\n[4] Sair\n");
 }
 
 // Esta função lê as perguntas do arquivo
@@ -207,6 +224,33 @@ int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]){
 	}
 }
 
+//Este procedimento recupera as respostas escritas no arquivo
+int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], int respostas[][100], int retorno[2]){
+	int i = 0;
+	char linha_respostas[201];
+	arqResultado = fopen(titulo, "r");
+	if (arqResultado == NULL){
+		printf("Não foi possível abrir o arquivo, tente novamente!\n");
+		return 0;
+	}
+	else{
+		while(!feof(arqResultado)){
+			fgets(resultados[i].curso, 100, arqResultado);
+			fgets(resultados[i].sexo, 100, arqResultado);
+			fscanf(arqResultado, "%d\n", &resultados[i].idade);
+			fgets(linha_respostas, 201, arqResultado);
+			puts(resultados[i].curso);
+			puts(resultados[i].sexo);
+			printf("%d\n", resultados[i].idade);
+			puts(linha_respostas);
+			retorno[1] = obterRespostas(linha_respostas, respostas, i);
+			i++;
+		}
+		retorno[0] = i;
+		return i;
+	}
+}
+
 // Este procedimento separa os itens da escala
 void separarEscala(Escala escalas[], char stringCompleta[], int nEscala){
 	int i = 0, j = 0, nItem = 0;
@@ -242,18 +286,31 @@ int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titul
 	}
 	else{
 		for(i = 0; i < qtd_participantes; i++){
-			// Aqui vem o printf do curso;
+			if (i > 0){
+				fprintf(arqRespostas, "\n");
+			}
 			fputs(participantes[i].curso, arqRespostas);
-			printf("\n");
+			fprintf(arqRespostas, "\n");
 			fputs(participantes[i].sexo, arqRespostas);
 			fprintf(arqRespostas, "%d\n", participantes[i].idade);
 			for (j = 0; j < qtd_perguntas; j++){
 				fprintf(arqRespostas, "%d ", respostas[i][j]);
 			}
-			fprintf(arqRespostas, "\n");
 		}
 		return i;
 	}
+}
+
+int obterRespostas(char linha[], int respostas[][100], int nParticipante){
+	int i = 0, j = 0;
+	while (linha[i] != 0){
+		if (linha[i] != ' '){
+			respostas[nParticipante][j] = linha[i];
+			j++;
+		}
+		i++;
+	}
+	return j;
 }
 
 int inicializarCursos(char cursos[][25]){
