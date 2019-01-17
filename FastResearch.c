@@ -3,7 +3,7 @@
 #include <locale.h>
 #include <string.h>
 
-// As descrições das funções aqui prototipadas, estão no final do código, junto com as mesmas.
+
 typedef struct pergunta{
 	char enunciado[100];
 	int codEscala;	
@@ -21,6 +21,8 @@ typedef struct participante{
 	int idade;
 	//int respostas[]
 } Participante;
+
+// As descrições das funções aqui prototipadas, estão no final do código, junto com as mesmas.
 
 void exibirMenu();
 
@@ -152,7 +154,7 @@ int main(){
 				salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante+1, respostas);
 				break;
 			case 3:
-				printf("Qual o nome do arquivo de respostas, que você deseja consultar? (utilize a extensão .txt)\n");
+				printf("Qual o nome do arquivo de respostas que você deseja consultar? (utilize a extensão .txt)\n");
 				gets(titulo_resultados);
 				// A variável exito_resultados recebe a quantidade de entrevistados no arquivo
 				exito_resultados = lerResultados(arq_resultados, titulo_resultados, resultados, respostas_arquivo, retorno_duplo);
@@ -220,6 +222,7 @@ int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]){
 			separarEscala(escalas, escalas_agrupadas, posicao);
 			posicao++;
 		}
+		fclose(arqEscalas);
 		return posicao;
 	}
 }
@@ -227,7 +230,7 @@ int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]){
 //Este procedimento recupera as respostas escritas no arquivo
 int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], int respostas[][100], int retorno[2]){
 	int i = 0;
-	char linha_respostas[201];
+	char linha_respostas[202];
 	arqResultado = fopen(titulo, "r");
 	if (arqResultado == NULL){
 		printf("Não foi possível abrir o arquivo, tente novamente!\n");
@@ -238,7 +241,7 @@ int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], 
 			fgets(resultados[i].curso, 100, arqResultado);
 			fgets(resultados[i].sexo, 100, arqResultado);
 			fscanf(arqResultado, "%d\n", &resultados[i].idade);
-			fgets(linha_respostas, 201, arqResultado);
+			fgets(linha_respostas, 202, arqResultado);
 			puts(resultados[i].curso);
 			puts(resultados[i].sexo);
 			printf("%d\n", resultados[i].idade);
@@ -247,6 +250,7 @@ int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], 
 			i++;
 		}
 		retorno[0] = i;
+		fclose(arqResultado);
 		return i;
 	}
 }
@@ -297,15 +301,21 @@ int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titul
 				fprintf(arqRespostas, "%d ", respostas[i][j]);
 			}
 		}
+		fclose(arqRespostas);
 		return i;
 	}
 }
 
 int obterRespostas(char linha[], int respostas[][100], int nParticipante){
 	int i = 0, j = 0;
+	puts(linha);
+	printf("%d \n", sizeof(linha));
 	while (linha[i] != 0){
+		printf("%c", linha[i]);
 		if (linha[i] != ' '){
-			respostas[nParticipante][j] = linha[i];
+			respostas[nParticipante][j] = linha[i] - '0';
+			printf("\n Participante %d \n", nParticipante);
+			printf("%d ", respostas[nParticipante][j]);
 			j++;
 		}
 		i++;
@@ -341,4 +351,12 @@ int inicializarCursos(char cursos[][25]){
 		} while (finalizado < 1 || finalizado > 2);
 	} while (finalizado == 1);
 	return j;
+}
+
+// Funções de cálculos
+int freqAbsoluta(int respostas[][100], int nQuestao, int qtdItens, int qtdEntrevistados){
+	int i = 0, frequencia[10];
+	for (i = 0; i < qtdEntrevistados; i++){
+		
+	}
 }
