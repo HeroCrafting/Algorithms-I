@@ -44,7 +44,7 @@ void exibirErro(int resposta, int min, int max);
 
 int main(){
 	FILE *arq_perguntas, *arq_escalas, *arq_respostas, *arq_resultados;
-	int respostas[1000][100], respostas_arquivo[1000][100], retorno_duplo[2];
+	int respostas[1000][100], respostas_arquivo[1000][100], retorno_duplo[2], frequencia_absoluta[10], moda[10];
 	int menu, sexo, curso, idade, compativel, resposta, limite;
 	int controle = 0, exito_perguntas = 0, exito_escalas = 0, exito_resultados = 0, qtd_cursos = 0, fim_entrevistas = 0, participante = 0;
 	int i = 0, j = 0, k = 0;
@@ -354,9 +354,54 @@ int inicializarCursos(char cursos[][25]){
 }
 
 // Funções de cálculos
-int freqAbsoluta(int respostas[][100], int nQuestao, int qtdItens, int qtdEntrevistados){
-	int i = 0, frequencia[10];
+
+// Este procedimento calcula a frequência absoluta por questão
+// Rever como vai exibir de acordo a qtd de itens na escala
+void freqAbsoluta(int respostas[][100], int frequencia[], int nQuestao, int qtdItens, int qtdEntrevistados){
+	int i = 0, valorCelula;
+	// O primeiro for é para zerar o vetor
+	for(i = 0; i < 10; i++){
+		frequencia[i] = 0;
+	}
+	
 	for (i = 0; i < qtdEntrevistados; i++){
-		
+		valorCelula = respostas[i][nQuestao - 1];
+		frequencia[valorCelula - 1]++;
 	}
 }
+
+// Esta função calcula a moda de cada questão
+// Rever se é realmente necessário passar o vetor moda[] como parâmetro
+int moda(int respostas[][100], int moda[], int nQuestao, int qtdEntrevistados){
+	int i = 0, valorCelula, maior = 0;
+	// O primeiro for é para zerar o vetor
+	for(i = 0; i < 10; i++){
+		frequencia[i] = 0;
+	}
+	
+	for(i = 0; i < qtdEntrevistadso; i++){
+		valorCelula = respostas[i][nQuestao - 1];
+		moda[valorCelular - 1]++;
+	}
+	
+	for (i = 0; i < 10; i++){
+		if(moda[i] > maior){
+			maior = moda[i];
+		}
+	}
+	
+	return maior;
+}
+
+// Esta função calcula a media aritmética de cada questão
+float mediaAritmetica(int respostas[][100], int qtdEntrevistados, int qtdQuestoes, int nQuestao){
+	int i = 0, j = 0;
+	float media = 0;
+	for (i = 0; i < qtdEntrevistado; i++){
+		media = media + respostas[i][nQuestao - 1];
+	}
+	media = media/qtdEntrevistados;
+	return media;
+}
+
+int calcularEscore(int respostas[][100], int )
