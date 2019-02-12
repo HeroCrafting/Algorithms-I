@@ -1,0 +1,1512 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+/*******************************************************************************
+Autor: Diego do Carmo Silva
+Componente Curricular: Algoritmos I
+Concluido em: 11/10/2018
+Declaro que este código foi elaborado por mim de forma individual e não contém nenhum
+trecho de código de outro colega ou de outro autor, tais como provindos de livros e
+apostilas, e páginas ou documentos eletrônicos da Internet. Qualquer trecho de código
+de outra autoria que não a minha está destacado com uma citação para o autor e a fonte
+do código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+******************************************************************************************/
+
+// Essa função é só para repetir as opções para cada pergunta.
+char exibirEscala(){
+	printf("\nEssa enquete consiste em afirmações, às quais você deve reagir com as seguintes alternativas: \n");
+	printf("[1] Discordo Totalmente \n[2] Discordo \n[3] Discordo Parcialmente");
+	printf("\n[4] Concordo Parcialmente \n[5] Concordo \n[6] Concordo Totalmente\n\n");
+}
+
+// Essa função calcula as frequencias relativas.
+float calcFreqRelativa (int concordancia, int participantes){
+	float freqRelativa;
+	freqRelativa = concordancia * 100.0 / participantes;
+	return freqRelativa;
+}
+
+int main(int argc, char *argv[]) {
+	int start = 0, resposta, individual = 0, total = 0, participantes = 0;
+	int idade, faixa1 = 0, faixa2 = 0, faixa3 = 0;
+	int curso, letrasVern = 0, historia = 0, medicina = 0, engCivil = 0;
+	int sexo, sexoMasc = 0, sexoFem = 0;
+	int ctotalq1 = 0, concordaq1 = 0, cparcq1 = 0, dparcq1 = 0, discordaq1 = 0, dtotalq1 = 0;
+	int ctotalq2 = 0, concordaq2 = 0, cparcq2 = 0, dparcq2 = 0, discordaq2 = 0, dtotalq2 = 0;
+	int ctotalq3 = 0, concordaq3 = 0, cparcq3 = 0, dparcq3 = 0, discordaq3 = 0, dtotalq3 = 0;
+	int ctotalq4 = 0, concordaq4 = 0, cparcq4 = 0, dparcq4 = 0, discordaq4 = 0, dtotalq4 = 0;
+	int ctotalq5 = 0, concordaq5 = 0, cparcq5 = 0, dparcq5 = 0, discordaq5 = 0, dtotalq5 = 0;
+	int ctotalq6 = 0, concordaq6 = 0, cparcq6 = 0, dparcq6 = 0, discordaq6 = 0, dtotalq6 = 0;
+	int ctotalq7 = 0, concordaq7 = 0, cparcq7 = 0, dparcq7 = 0, discordaq7 = 0, dtotalq7 = 0;
+	int ctotalq8 = 0, concordaq8 = 0, cparcq8 = 0, dparcq8 = 0, discordaq8 = 0, dtotalq8 = 0;
+	int ctotalq9 = 0, concordaq9 = 0, cparcq9 = 0, dparcq9 = 0, discordaq9 = 0, dtotalq9 = 0;
+	int ctotalq10 = 0, concordaq10 = 0, cparcq10 = 0, dparcq10 = 0, discordaq10 = 0, dtotalq10 = 0;
+	int ctotalq11 = 0, concordaq11 = 0, cparcq11 = 0, dparcq11 = 0, discordaq11 = 0, dtotalq11 = 0;
+	int ctotalq12 = 0, concordaq12 = 0, cparcq12 = 0, dparcq12 = 0, discordaq12 = 0, dtotalq12 = 0;
+	int ctotalq13 = 0, concordaq13 = 0, cparcq13 = 0, dparcq13 = 0, discordaq13 = 0, dtotalq13 = 0;
+	int ctotalq14 = 0, concordaq14 = 0, cparcq14 = 0, dparcq14 = 0, discordaq14 = 0, dtotalq14 = 0;
+	int ctotalq15 = 0, concordaq15 = 0, cparcq15 = 0, dparcq15 = 0, discordaq15 = 0, dtotalq15 = 0;
+	int ctotalq16 = 0, concordaq16 = 0, cparcq16 = 0, dparcq16 = 0, discordaq16 = 0, dtotalq16 = 0;
+	int ctotalq17 = 0, concordaq17 = 0, cparcq17 = 0, dparcq17 = 0, discordaq17 = 0, dtotalq17 = 0;
+	
+	float relativaDTotalq1, relativadiscordaq1, relativaDParcq1, relativaCParcq1, relativaconcordaq1, relativaCTotalq1;
+	float relativaDTotalq2, relativadiscordaq2, relativaDParcq2, relativaCParcq2, relativaconcordaq2, relativaCTotalq2;
+	float relativaDTotalq3, relativadiscordaq3, relativaDParcq3, relativaCParcq3, relativaconcordaq3, relativaCTotalq3;
+	float relativaDTotalq4, relativadiscordaq4, relativaDParcq4, relativaCParcq4, relativaconcordaq4, relativaCTotalq4;
+	float relativaDTotalq5, relativadiscordaq5, relativaDParcq5, relativaCParcq5, relativaconcordaq5, relativaCTotalq5;
+	float relativaDTotalq6, relativadiscordaq6, relativaDParcq6, relativaCParcq6, relativaconcordaq6, relativaCTotalq6;
+	float relativaDTotalq7, relativadiscordaq7, relativaDParcq7, relativaCParcq7, relativaconcordaq7, relativaCTotalq7;
+	float relativaDTotalq8, relativadiscordaq8, relativaDParcq8, relativaCParcq8, relativaconcordaq8, relativaCTotalq8;
+	float relativaDTotalq9, relativadiscordaq9, relativaDParcq9, relativaCParcq9, relativaconcordaq9, relativaCTotalq9;
+	float relativaDTotalq10, relativadiscordaq10, relativaDParcq10, relativaCParcq10, relativaconcordaq10, relativaCTotalq10;
+	float relativaDTotalq11, relativadiscordaq11, relativaDParcq11, relativaCParcq11, relativaconcordaq11, relativaCTotalq11;
+	float relativaDTotalq12, relativadiscordaq12, relativaDParcq12, relativaCParcq12, relativaconcordaq12, relativaCTotalq12;
+	float relativaDTotalq13, relativadiscordaq13, relativaDParcq13, relativaCParcq13, relativaconcordaq13, relativaCTotalq13;
+	float relativaDTotalq14, relativadiscordaq14, relativaDParcq14, relativaCParcq14, relativaconcordaq14, relativaCTotalq14;
+	float relativaDTotalq15, relativadiscordaq15, relativaDParcq15, relativaCParcq15, relativaconcordaq15, relativaCTotalq15;
+	float relativaDTotalq16, relativadiscordaq16, relativaDParcq16, relativaCParcq16, relativaconcordaq16, relativaCTotalq16;
+	float relativaDTotalq17, relativadiscordaq17, relativaDParcq17, relativaCParcq17, relativaconcordaq17, relativaCTotalq17;
+	
+	float ipa = 0, ipaTotal = 0, ipaFem = 0, ipaMasc = 0, ipaLetras = 0, ipaHistoria = 0, ipaMedicina = 0, ipaCivil = 0, ipaFaixa1 = 0, ipaFaixa2 = 0, ipaFaixa3 = 0;
+	float escore1, escore1Fem = 0, escore1Masc = 0;
+	float escore1Letras = 0, escore1Historia = 0, escore1Medicina = 0, escore1Civil = 0, escore1Faixa1 = 0, escore1Faixa2 = 0, escore1Faixa3 = 0;
+	float escore2, escore2Fem = 0, escore2Masc = 0;
+	float escore2Letras = 0, escore2Historia = 0, escore2Medicina = 0, escore2Civil = 0, escore2Faixa1 = 0, escore2Faixa2 = 0, escore2Faixa3 = 0;
+	float escore3, escore3Fem = 0, escore3Masc = 0;
+	float escore3Letras = 0, escore3Historia = 0, escore3Medicina = 0, escore3Civil = 0, escore3Faixa1 = 0, escore3Faixa2 = 0, escore3Faixa3 = 0;
+	float escore1Total = 0, escore2Total = 0, escore3Total = 0;
+
+	// Utilização da função setlocale para configurar o "idioma" utilizado.
+	setlocale(LC_ALL,"Portuguese");
+	
+	do{
+		system("cls");
+		printf("\nPesquisa de opinião para delimitação do perfil do eleitor brasileiro em relação a autoritarismo.\n");
+		printf("\n\nAntes de qualquer coisa, qual a sua idade?\n");
+		scanf("%d", &idade);
+		// Essa condicional vai fazer a primeira filtragem, ou seja, só permitirá prosseguir quem possui 18 anos ou mais.
+		if (idade < 18){
+			printf("Infelizmente, você não possui idade para participar da pesquisa... \nAté mais!");
+			start = 1;
+		}
+		else{
+			// Além disso, logo no começo do else vai ser realizada a separação em faixas etárias.
+			if (idade >= 18 && idade < 21){
+				faixa1++;
+			}
+			else if (idade >= 21 && idade <= 23){
+				faixa2++;
+			}
+			else{
+				faixa3++;
+			}
+			
+			do{
+				// Aqui começa a segunda etapa da triagem, separação por sexo.
+				printf("\nQual o seu sexo? \n[1] Masculino \n[2] Feminino\n");
+				scanf("%d", &sexo);
+				if (sexo == 1){
+					sexoMasc++;
+				}
+				else if (sexo == 2){
+					sexoFem++;
+				}
+				else{
+					printf("\nOpção Inválida");
+				}
+			} while (sexo < 1 || sexo > 2);
+			system("cls");
+			do{
+				// Aqui vem a terceira etapa da triagem: curso.
+				printf("\nQual o seu curso? \n[1] Letras Vernáculas \n[2] História \n[3] Medicina \n[4] Engenharia Civil\n");
+				scanf("%d", &curso);
+				if (curso == 1){
+					letrasVern++;
+				}
+				else if (curso == 2){
+					historia++;
+				}
+				else if (curso == 3){
+					medicina++;
+				}
+				else if (curso == 4){
+					engCivil++;
+				}
+				else{
+					printf("\nOpção Inválida!");
+				}
+			} while (curso < 1 || curso > 4);
+			system("cls");
+			
+			do{
+				exibirEscala();
+				printf("1) O que este país necessita, principalmente, antes de leis ou planos políticos, é de alguns líderes valentes, incansáveis e dedicados em quem o povo possa depositar a sua fé.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq1++;
+					break;
+				case 2:
+					discordaq1++;
+					break;
+				case 3:
+					dparcq1++;
+					break;
+				case 4:
+					cparcq1++;
+					break;
+				case 5:
+					concordaq1++;
+					break;
+				case 6:
+					ctotalq1++;
+					break;
+			}
+			if (sexo == 1){
+				escore1Masc = escore1Masc + resposta;
+			}
+			else{
+				escore1Fem = escore1Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore1Faixa1 = escore1Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore1Faixa2 = escore1Faixa2 + resposta;
+			}
+			else{
+				escore1Faixa3 = escore1Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore1Letras = escore1Letras + resposta;
+			}
+			else if (curso == 2){
+				escore1Historia = escore1Historia + resposta;
+			}
+			else if (curso == 3){
+				escore1Medicina = escore1Medicina + resposta;
+			}
+			else{
+				escore1Civil = escore1Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore1Total = escore1Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n2) A obediência e o respeito à autoridade são as principais virtudes que devemos ensinar as nossas crianças.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq2++;
+					break;
+				case 2:
+					discordaq2++;
+					break;
+				case 3:
+					dparcq2++;
+					break;
+				case 4:
+					cparcq2++;
+					break;
+				case 5:
+					concordaq2++;
+					break;
+				case 6:
+					ctotalq2++;
+					break;
+			}
+			if (sexo == 1){
+				escore1Masc = escore1Masc + resposta;
+			}
+			else{
+				escore1Fem = escore1Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore1Faixa1 = escore1Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore1Faixa2 = escore1Faixa2 + resposta;
+			}
+			else{
+				escore1Faixa3 = escore1Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore1Letras = escore1Letras + resposta;
+			}
+			else if (curso == 2){
+				escore1Historia = escore1Historia + resposta;
+			}
+			else if (curso == 3){
+				escore1Medicina = escore1Medicina + resposta;
+			}
+			else{
+				escore1Civil = escore1Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore1Total = escore1Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n3) Não há nada pior do que uma pessoa que não sente profundo amor, gratidão e respeito por seus pais.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq3++;
+					break;
+				case 2:
+					discordaq3++;
+					break;
+				case 3:
+					dparcq3++;
+					break;
+				case 4:
+					cparcq3++;
+					break;
+				case 5:
+					concordaq3++;
+					break;
+				case 6:
+					ctotalq3++;
+					break;
+			}
+			if (sexo == 1){
+				escore1Masc = escore1Masc + resposta;
+			}
+			else{
+				escore1Fem = escore1Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore1Faixa1 = escore1Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore1Faixa2 = escore1Faixa2 + resposta;
+			}
+			else{
+				escore1Faixa3 = escore1Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore1Letras = escore1Letras + resposta;
+			}
+			else if (curso == 2){
+				escore1Historia = escore1Historia + resposta;
+			}
+			else if (curso == 3){
+				escore1Medicina = escore1Medicina + resposta;
+			}
+			else{
+				escore1Civil = escore1Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore1Total = escore1Total + resposta;
+
+			do{
+				exibirEscala();
+				printf("\n4) Nenhuma pessoa decente, normal e em seu são juízo pensaria em ofender um amigo ou parente próximo.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq4++;
+					break;
+				case 2:
+					discordaq4++;
+					break;
+				case 3:
+					dparcq4++;
+					break;
+				case 4:
+					cparcq4++;
+					break;
+				case 5:
+					concordaq4++;
+					break;
+				case 6:
+					ctotalq4++;
+					break;
+			}
+			if (sexo == 1){
+				escore1Masc = escore1Masc + resposta;
+			}
+			else{
+				escore1Fem = escore1Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore1Faixa1 = escore1Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore1Faixa2 = escore1Faixa2 + resposta;
+			}
+			else{
+				escore1Faixa3 = escore1Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore1Letras = escore1Letras + resposta;
+			}
+			else if (curso == 2){
+				escore1Historia = escore1Historia + resposta;
+			}
+			else if (curso == 3){
+				escore1Medicina = escore1Medicina + resposta;
+			}
+			else{
+				escore1Civil = escore1Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore1Total = escore1Total + resposta;
+				
+			do{
+				exibirEscala();
+				printf("\n5) O policial é um guerreiro de Deus para impor a ordem e proteger as pessoas de bem.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq5++;
+					break;
+				case 2:
+					discordaq5++;
+					break;
+				case 3:
+					dparcq5++;
+					break;
+				case 4:
+					cparcq5++;
+					break;
+				case 5:
+					concordaq5++;
+					break;
+				case 6:
+					ctotalq5++;
+					break;
+			}
+			if (sexo == 1){
+				escore1Masc = escore1Masc + resposta;
+			}
+			else{
+				escore1Fem = escore1Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore1Faixa1 = escore1Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore1Faixa2 = escore1Faixa2 + resposta;
+			}
+			else{
+				escore1Faixa3 = escore1Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore1Letras = escore1Letras + resposta;
+			}
+			else if (curso == 2){
+				escore1Historia = escore1Historia + resposta;
+			}
+			else if (curso == 3){
+				escore1Medicina = escore1Medicina + resposta;
+			}
+			else{
+				escore1Civil = escore1Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore1Total = escore1Total + resposta;
+			
+			
+			// Realização do cálculo do escore 1 de cada categoria;
+			escore1 = individual / 5.0;
+
+			// Aqui o acumulador "individual" foi zerado, para começar a contar a outra categoria de perguntas;
+			individual = 0;
+			
+			do{
+				exibirEscala();
+				printf("\n6) A maioria de nossos problemas sociais estaria resolvida se pudéssemos nos livrar das pessoas imorais, dos marginais e dos pervertidos.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq6++;
+					break;
+				case 2:
+					discordaq6++;
+					break;
+				case 3:
+					dparcq6++;
+					break;
+				case 4:
+					cparcq6++;
+					break;
+				case 5:
+					concordaq6++;
+					break;
+				case 6:
+					ctotalq6++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n7) Se falássemos menos e trabalhássemos mais, todos estaríamos melhor.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+		switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq7++;
+					break;
+				case 2:
+					discordaq7++;
+					break;
+				case 3:
+					dparcq7++;
+					break;
+				case 4:
+					cparcq7++;
+					break;
+				case 5:
+					concordaq7++;
+					break;
+				case 6:
+					ctotalq7++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n8) Deve-se castigar sempre todo insulto à nossa honra.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq8++;
+					break;
+				case 2:
+					discordaq8++;
+					break;
+				case 3:
+					dparcq8++;
+					break;
+				case 4:
+					cparcq8++;
+					break;
+				case 5:
+					concordaq8++;
+					break;
+				case 6:
+					ctotalq8++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n9) Os crimes sexuais tais como o estupro ou ataques a crianças merecem mais que prisão;");
+				printf("quem comete esses crimes deveria receber punição física publicamente ou receber um castigo pior.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq9++;
+					break;
+				case 2:
+					discordaq9++;
+					break;
+				case 3:
+					dparcq9++;
+					break;
+				case 4:
+					cparcq9++;
+					break;
+				case 5:
+					concordaq9++;
+					break;
+				case 6:
+					ctotalq9++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n10) Os homossexuais são quase criminosos e deveriam receber um castigo severo.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq10++;
+					break;
+				case 2:
+					discordaq10++;
+					break;
+				case 3:
+					dparcq10++;
+					break;
+				case 4:
+					cparcq10++;
+					break;
+				case 5:
+					concordaq10++;
+					break;
+				case 6:
+					ctotalq10++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n11) Às vezes, os jovens têm ideias rebeldes que, com os anos, deverão superar para acalmar os seus pensamentos.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq11++;
+					break;
+				case 2:
+					discordaq11++;
+					break;
+				case 3:
+					dparcq11++;
+					break;
+				case 4:
+					cparcq11++;
+					break;
+				case 5:
+					concordaq11++;
+					break;
+				case 6:
+					ctotalq11++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n12) Hoje em dia, as pessoas se intrometem cada vez mais em assuntos que deveriam ser somente pessoais e privados.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq12++;
+					break;
+				case 2:
+					discordaq12++;
+					break;
+				case 3:
+					dparcq12++;
+					break;
+				case 4:
+					cparcq12++;
+					break;
+				case 5:
+					concordaq12++;
+					break;
+				case 6:
+					ctotalq12++;
+					break;
+			}
+			if (sexo == 1){
+				escore2Masc = escore2Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore2Fem = escore2Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore2Faixa1 = escore2Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore2Faixa2 = escore2Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore2Faixa3 = escore2Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore2Letras = escore2Letras + resposta;
+			}
+			else if (curso == 2){
+				escore2Historia = escore2Historia + resposta;
+			}
+			else if (curso == 3){
+				escore2Medicina = escore2Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore2Civil = escore2Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore2Total = escore2Total + resposta;
+			
+			// Cálculo do escore2.
+			escore2 = individual / 7.0;
+			
+			// Novamente, o acumulador total foi zerado, para pontuar para o escore 3.
+			individual = 0;
+			
+			do{
+				exibirEscala();
+				printf("\n13) A ciência tem o seu lugar, mas há muitas coisas importantes que a mente humana jamais poderá compreender.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq13++;
+					break;
+				case 2:
+					discordaq13++;
+					break;
+				case 3:
+					dparcq13++;
+					break;
+				case 4:
+					cparcq13++;
+					break;
+				case 5:
+					concordaq13++;
+					break;
+				case 6:
+					ctotalq13++;
+					break;
+			}
+			if (sexo == 1){
+				escore3Masc = escore3Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore3Fem = escore3Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore3Faixa1 = escore3Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore3Faixa2 = escore3Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore3Faixa3 = escore3Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore3Letras = escore3Letras + resposta;
+			}
+			else if (curso == 2){
+				escore3Historia = escore3Historia + resposta;
+			}
+			else if (curso == 3){
+				escore3Medicina = escore3Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore3Civil = escore3Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore3Total = escore3Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n14) Os homens podem ser divididos em duas classes definidas: os fracos e os fortes.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq14++;
+					break;
+				case 2:
+					discordaq14++;
+					break;
+				case 3:
+					dparcq14++;
+					break;
+				case 4:
+					cparcq14++;
+					break;
+				case 5:
+					concordaq14++;
+					break;
+				case 6:
+					ctotalq14++;
+					break;
+			}
+			if (sexo == 1){
+				escore3Masc = escore3Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore3Fem = escore3Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore3Faixa1 = escore3Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore3Faixa2 = escore3Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore3Faixa3 = escore3Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore3Letras = escore3Letras + resposta;
+			}
+			else if (curso == 2){
+				escore3Historia = escore3Historia + resposta;
+			}
+			else if (curso == 3){
+				escore3Medicina = escore3Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore3Civil = escore3Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore3Total = escore3Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n15) Um indivíduo de más maneiras, maus costumes e má educação dificilmente pode fazer amizade com pessoas decentes.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq15++;
+					break;
+				case 2:
+					discordaq15++;
+					break;
+				case 3:
+					dparcq15++;
+					break;
+				case 4:
+					cparcq15++;
+					break;
+				case 5:
+					concordaq15++;
+					break;
+				case 6:
+					ctotalq15++;
+					break;
+			}
+			if (sexo == 1){
+				escore3Masc = escore3Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore3Fem = escore3Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore3Faixa1 = escore3Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore3Faixa2 = escore3Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore3Faixa3 = escore3Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore3Letras = escore3Letras + resposta;
+			}
+			else if (curso == 2){
+				escore3Historia = escore3Historia + resposta;
+			}
+			else if (curso == 3){
+				escore3Medicina = escore3Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore3Civil = escore3Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore3Total = escore3Total + resposta;
+			
+			
+			do{
+				exibirEscala();
+				printf("\n16) Todos devemos ter fé absoluta em um poder sobrenatural, cujas decisões devemos acatar.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq16++;
+					break;
+				case 2:
+					discordaq16++;
+					break;
+				case 3:
+					dparcq16++;
+					break;
+				case 4:
+					cparcq16++;
+					break;
+				case 5:
+					concordaq16++;
+					break;
+				case 6:
+					ctotalq16++;
+					break;
+			}
+			if (sexo == 1){
+				escore3Masc = escore3Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore3Fem = escore3Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore3Faixa1 = escore3Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore3Faixa2 = escore3Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore3Faixa3 = escore3Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore3Letras = escore3Letras + resposta;
+			}
+			else if (curso == 2){
+				escore3Historia = escore3Historia + resposta;
+			}
+			else if (curso == 3){
+				escore3Medicina = escore3Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore3Civil = escore3Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore3Total = escore3Total + resposta;
+			
+			do{
+				exibirEscala();
+				printf("\n17) Pobreza é consequência da falta de vontade de querer trabalhar.");
+				scanf("%d", &resposta);
+				system("cls");
+			}while (resposta < 1 || resposta > 6);
+			switch(resposta){
+				// Para cada caso, uma variável é incrementada, para o cálculo da frequencia por resposta.
+				case 1:
+					dtotalq17++;
+					break;
+				case 2:
+					discordaq17++;
+					break;
+				case 3:
+					dparcq17++;
+					break;
+				case 4:
+					cparcq17++;
+					break;
+				case 5:
+					concordaq17++;
+					break;
+				case 6:
+					ctotalq17++;
+					break;
+			}
+			if (sexo == 1){
+				escore3Masc = escore3Masc + resposta;
+			}
+			else if (sexo == 2){
+				escore3Fem = escore3Fem + resposta;
+			}
+			if (idade >= 18 && idade < 21){
+				escore3Faixa1 = escore3Faixa1 + resposta;
+			}
+			else if (idade >= 21 && idade <= 23){
+				escore3Faixa2 = escore3Faixa2 + resposta;
+			}
+			else if (idade > 23){
+				escore3Faixa3 = escore3Faixa3 + resposta;
+			}
+			if (curso == 1){
+				escore3Letras = escore3Letras + resposta;
+			}
+			else if (curso == 2){
+				escore3Historia = escore3Historia + resposta;
+			}
+			else if (curso == 3){
+				escore3Medicina = escore3Medicina + resposta;
+			}
+			else if (curso == 4){
+				escore3Civil = escore3Civil + resposta;
+			}
+			individual = individual + resposta;
+			total = total + resposta;
+			escore3Total = escore3Total + resposta;
+			
+			// Cálculo do escore3
+			escore3 = individual / 5.0;
+
+			// O total é zerado novamente para recomeçar o loop.
+			individual = 0;
+			
+			ipa = 2 * (((escore1 + escore2 + escore3) / 3) - 1);
+			printf("Resultados Individuais: ");
+			printf("\n Submissão à autoridade: %.1f \n Agressividade Autoritária: %.1f \n Convencionalismo: %.1f \n", escore1, escore2, escore3);
+			printf("O IPA(Índice de Propensão ao Autoritarismo) do candidato é: %.1f", ipa);
+			participantes++;
+		}
+		do{
+			system("cls");
+			printf("\n\nEscolha: \n[0] Finalizar \n[1] Entrevistar outro candidato \n");
+			scanf("%d", &start);
+		} while (start < 0 || start > 1);
+	} while(start != 0);
+	system("cls");
+	// Aqui fora do do-while é a sessão de cálculos gerais e exibições.
+	
+	// Frequências relativas.
+	relativaDTotalq1 = calcFreqRelativa(dtotalq1, participantes);
+	relativadiscordaq1 = calcFreqRelativa(discordaq1, participantes);
+	relativaDParcq1 = calcFreqRelativa(dparcq1, participantes);
+	relativaCParcq1 = calcFreqRelativa(cparcq1, participantes);
+	relativaconcordaq1 = calcFreqRelativa(concordaq1, participantes);
+	relativaCTotalq1 = calcFreqRelativa(ctotalq1, participantes);
+	
+	relativaDTotalq2 = calcFreqRelativa(dtotalq2, participantes);
+	relativadiscordaq2 = calcFreqRelativa(discordaq2, participantes);
+	relativaDParcq2 = calcFreqRelativa(dparcq2, participantes);
+	relativaCParcq2 = calcFreqRelativa(cparcq2, participantes);
+	relativaconcordaq2 = calcFreqRelativa(concordaq2, participantes);
+	relativaCTotalq2 = calcFreqRelativa(ctotalq2, participantes);
+	
+	relativaDTotalq3 = calcFreqRelativa(dtotalq3, participantes);
+	relativadiscordaq3 = calcFreqRelativa(discordaq3, participantes);
+	relativaDParcq3 = calcFreqRelativa(dparcq3, participantes);
+	relativaCParcq3 = calcFreqRelativa(cparcq3, participantes);
+	relativaconcordaq3 = calcFreqRelativa(concordaq3, participantes);
+	relativaCTotalq3 = calcFreqRelativa(ctotalq3, participantes);
+	
+	relativaDTotalq4 = calcFreqRelativa(dtotalq4, participantes);
+	relativadiscordaq4 = calcFreqRelativa(discordaq4, participantes);
+	relativaDParcq4 = calcFreqRelativa(dparcq4, participantes);
+	relativaCParcq4 = calcFreqRelativa(cparcq4, participantes);
+	relativaconcordaq4 = calcFreqRelativa(concordaq4, participantes);
+	relativaCTotalq4 = calcFreqRelativa(ctotalq4, participantes);
+	
+	relativaDTotalq5 = calcFreqRelativa(dtotalq5, participantes);
+	relativadiscordaq5 = calcFreqRelativa(discordaq5, participantes);
+	relativaDParcq5 = calcFreqRelativa(dparcq5, participantes);
+	relativaCParcq5 = calcFreqRelativa(cparcq5, participantes);
+	relativaconcordaq5 = calcFreqRelativa(concordaq5, participantes);
+	relativaCTotalq5 = calcFreqRelativa(ctotalq5, participantes);
+	
+	relativaDTotalq6 = calcFreqRelativa(dtotalq6, participantes);
+	relativadiscordaq6 = calcFreqRelativa(discordaq6, participantes);
+	relativaDParcq6 = calcFreqRelativa(dparcq6, participantes);
+	relativaCParcq6 = calcFreqRelativa(cparcq6, participantes);
+	relativaconcordaq6 = calcFreqRelativa(concordaq6, participantes);
+	relativaCTotalq6 = calcFreqRelativa(ctotalq6, participantes);
+	
+	relativaDTotalq7 = calcFreqRelativa(dtotalq7, participantes);
+	relativadiscordaq7 = calcFreqRelativa(discordaq7, participantes);
+	relativaDParcq7 = calcFreqRelativa(dparcq7, participantes);
+	relativaCParcq7 = calcFreqRelativa(cparcq7, participantes);
+	relativaconcordaq7 = calcFreqRelativa(concordaq7, participantes);
+	relativaCTotalq7 = calcFreqRelativa(ctotalq7, participantes);
+	
+	relativaDTotalq8 = calcFreqRelativa(dtotalq8, participantes);
+	relativadiscordaq8 = calcFreqRelativa(discordaq8, participantes);
+	relativaDParcq8 = calcFreqRelativa(dparcq8, participantes);
+	relativaCParcq8 = calcFreqRelativa(cparcq8, participantes);
+	relativaconcordaq8 = calcFreqRelativa(concordaq8, participantes);
+	relativaCTotalq8 = calcFreqRelativa(ctotalq8, participantes);
+	
+	relativaDTotalq9 = calcFreqRelativa(dtotalq9, participantes);
+	relativadiscordaq9 = calcFreqRelativa(discordaq9, participantes);
+	relativaDParcq9 = calcFreqRelativa(dparcq9, participantes);
+	relativaCParcq9 = calcFreqRelativa(cparcq9, participantes);
+	relativaconcordaq9 = calcFreqRelativa(concordaq9, participantes);
+	relativaCTotalq9 = calcFreqRelativa(ctotalq9, participantes);
+	
+	relativaDTotalq10 = calcFreqRelativa(dtotalq10, participantes);
+	relativadiscordaq10 = calcFreqRelativa(discordaq10, participantes);
+	relativaDParcq10 = calcFreqRelativa(dparcq10, participantes);
+	relativaCParcq10 = calcFreqRelativa(cparcq10, participantes);
+	relativaconcordaq10 = calcFreqRelativa(concordaq10, participantes);
+	relativaCTotalq10 = calcFreqRelativa(ctotalq10, participantes);
+	
+	relativaDTotalq11 = calcFreqRelativa(dtotalq11, participantes);
+	relativadiscordaq11 = calcFreqRelativa(discordaq11, participantes);
+	relativaDParcq11 = calcFreqRelativa(dparcq11, participantes);
+	relativaCParcq11 = calcFreqRelativa(cparcq11, participantes);
+	relativaconcordaq11 = calcFreqRelativa(concordaq11, participantes);
+	relativaCTotalq11 = calcFreqRelativa(ctotalq11, participantes);
+	
+	relativaDTotalq12 = calcFreqRelativa(dtotalq12, participantes);
+	relativadiscordaq12 = calcFreqRelativa(discordaq12, participantes);
+	relativaDParcq12 = calcFreqRelativa(dparcq12, participantes);
+	relativaCParcq12 = calcFreqRelativa(cparcq12, participantes);
+	relativaconcordaq12 = calcFreqRelativa(concordaq12, participantes);
+	relativaCTotalq12 = calcFreqRelativa(ctotalq12, participantes);
+	
+	relativaDTotalq13 = calcFreqRelativa(dtotalq13, participantes);
+	relativadiscordaq13 = calcFreqRelativa(discordaq13, participantes);
+	relativaDParcq13 = calcFreqRelativa(dparcq13, participantes);
+	relativaCParcq13 = calcFreqRelativa(cparcq13, participantes);
+	relativaconcordaq13 = calcFreqRelativa(concordaq13, participantes);
+	relativaCTotalq13 = calcFreqRelativa(ctotalq13, participantes);
+	
+	relativaDTotalq14 = calcFreqRelativa(dtotalq14, participantes);
+	relativadiscordaq14 = calcFreqRelativa(discordaq14, participantes);
+	relativaDParcq14 = calcFreqRelativa(dparcq14, participantes);
+	relativaCParcq14 = calcFreqRelativa(cparcq14, participantes);
+	relativaconcordaq14 = calcFreqRelativa(concordaq14, participantes);
+	relativaCTotalq14 = calcFreqRelativa(ctotalq14, participantes);
+	
+	relativaDTotalq15 = calcFreqRelativa(dtotalq15, participantes);
+	relativadiscordaq15 = calcFreqRelativa(discordaq15, participantes);
+	relativaDParcq15 = calcFreqRelativa(dparcq15, participantes);
+	relativaCParcq15 = calcFreqRelativa(cparcq15, participantes);
+	relativaconcordaq15 = calcFreqRelativa(concordaq15, participantes);
+	relativaCTotalq15 = calcFreqRelativa(ctotalq15, participantes);
+	
+	relativaDTotalq16 = calcFreqRelativa(dtotalq16, participantes);
+	relativadiscordaq16 = calcFreqRelativa(discordaq16, participantes);
+	relativaDParcq16 = calcFreqRelativa(dparcq16, participantes);
+	relativaCParcq16 = calcFreqRelativa(cparcq16, participantes);
+	relativaconcordaq16 = calcFreqRelativa(concordaq16, participantes);
+	relativaCTotalq16 = calcFreqRelativa(ctotalq16, participantes);
+	
+	relativaDTotalq17 = calcFreqRelativa(dtotalq17, participantes);
+	relativadiscordaq17 = calcFreqRelativa(discordaq17, participantes);
+	relativaDParcq17 = calcFreqRelativa(dparcq17, participantes);
+	relativaCParcq17 = calcFreqRelativa(cparcq17, participantes);
+	relativaconcordaq17 = calcFreqRelativa(concordaq17, participantes);
+	relativaCTotalq17 = calcFreqRelativa(ctotalq17, participantes);
+	
+	// Calculo dos escores e IPA's de cada curso.
+	if (letrasVern > 0){
+		escore1Letras = (escore1Letras / 5.0) / letrasVern;
+		escore2Letras = (escore2Letras / 7.0) / letrasVern;
+		escore3Letras = (escore3Letras / 5.0) / letrasVern;
+		ipaLetras = 2 * (((escore1Letras + escore2Letras + escore3Letras) / 3) - 1);
+	}
+	
+	if (historia > 0){
+		escore1Historia = (escore1Historia / 5.0) / historia;
+		escore2Historia = (escore2Historia / 7.0) / historia;
+		escore3Historia = (escore3Historia / 5.0) / historia;
+		ipaHistoria = 2 * (((escore1Historia + escore2Historia + escore3Historia) / 3) - 1);
+	}
+		
+	if (medicina > 0){
+		escore1Medicina = (escore1Medicina / 5.0) / medicina;
+		escore2Medicina = (escore2Medicina / 7.0) / medicina;
+		escore3Medicina = (escore3Medicina / 5.0) / medicina;
+		ipaMedicina = 2 * (((escore1Medicina + escore2Medicina + escore3Medicina) / 3) - 1);
+	}
+	
+	if (engCivil > 0){
+		escore1Civil = (escore1Civil / 5.0) / engCivil;
+		escore2Civil = (escore2Civil / 7.0) / engCivil;
+		escore3Civil = (escore3Civil / 5.0) / engCivil;
+		ipaCivil = 2 * (((escore1Civil + escore2Civil + escore3Civil) / 3) - 1);
+	}
+
+	
+	// Cálculo dos escores e IPA's de cada gênero.
+	if (sexoMasc > 0){
+		escore1Masc = (escore1Masc / 5.0) / sexoMasc;
+		escore2Masc = (escore2Masc / 7.0) / sexoMasc;
+		escore3Masc = (escore3Masc / 5.0) / sexoMasc;
+		ipaMasc = 2 * (((escore1Masc + escore2Masc + escore3Masc) / 3) - 1);
+	}
+	
+	if (sexoFem > 0){
+		escore1Fem = (escore1Fem / 5.0) / sexoFem;
+		escore2Fem = (escore2Fem / 7.0) / sexoFem;
+		escore3Fem = (escore3Fem / 5.0) / sexoFem;
+		ipaFem = 2 * (((escore1Fem + escore2Fem + escore3Fem) / 3) - 1);
+	}
+
+	
+	// Cálculo dos escores e IPA's de cada Faixa Etária.
+	if (faixa1 > 0){
+		escore1Faixa1 = (escore1Faixa1 / 5.0) / faixa1;
+		escore2Faixa1 = (escore2Faixa1 / 7.0) / faixa1;
+		escore3Faixa1 = (escore3Faixa1 / 5.0) / faixa1;
+		ipaFaixa1 = 2 * (((escore1Faixa1 + escore2Faixa1 + escore3Faixa1) / 3) - 1);
+	}
+	
+	if (faixa2 > 0){
+		escore1Faixa2 = (escore1Faixa2 / 5.0) / faixa2;
+		escore2Faixa2 = (escore2Faixa2 / 7.0) / faixa2;
+		escore3Faixa2 = (escore3Faixa2 / 5.0) / faixa2;
+		ipaFaixa2 = 2 * (((escore1Faixa2 + escore2Faixa2 + escore3Faixa2) / 3) - 1);
+	}
+	
+	if (faixa3 > 0){
+		escore1Faixa3 = (escore1Faixa3 / 5.0) / faixa3;
+		escore2Faixa3 = (escore2Faixa3 / 7.0) / faixa3;
+		escore3Faixa3 = (escore3Faixa3 / 5.0) / faixa3;
+		ipaFaixa3 = 2 * (((escore1Faixa3 + escore2Faixa3 + escore3Faixa3) / 3) - 1);
+	}	
+	
+	// Escores e IPA do total de participantes da pesquisa
+	escore1Total = (escore1Total / 5.0) / participantes;
+	escore2Total = (escore2Total / 7.0) / participantes;
+	escore3Total = (escore3Total / 5.0) / participantes;
+	ipaTotal = 2 * (((escore1Total + escore2Total + escore3Total) / 3) - 1);		
+
+	
+	// Exibições
+	printf("Frequências absolutas e relativas por questão: ");
+	printf("\n\nQuestão 1: \n- Concordo Totalmente: %d | %.2f%%", ctotalq1, relativaCTotalq1);
+	printf("\n- Concordo: %d | %.2f%%", concordaq1, relativaconcordaq1);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq1, relativaCParcq1);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq1, relativaDParcq1);
+	printf("\n- Discordo: %d | %.2f%%", discordaq1, relativadiscordaq1);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq1, relativaDTotalq1);
+
+	printf("\n\nQuestão 2: \n- Concordo Totalmente: %d | %.2f%%", ctotalq2, relativaCTotalq2);
+	printf("\n- Concordo: %d | %.2f%%", concordaq2, relativaconcordaq2);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq2, relativaCParcq2);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq2, relativaDParcq2);
+	printf("\n- Discordo: %d | %.2f%%", discordaq2, relativadiscordaq2);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq2, relativaDTotalq2);
+
+	printf("\n\nQuestão 3: \n- Concordo Totalmente: %d | %.2f%%", ctotalq3, relativaCTotalq3);
+	printf("\n- Concordo: %d | %.2f%%", concordaq3, relativaconcordaq3);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq3, relativaCParcq3);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq3, relativaDParcq3);
+	printf("\n- Discordo: %d | %.2f%%", discordaq3, relativadiscordaq3);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq3, relativaDTotalq3);
+
+	printf("\n\nQuestão 4: \n- Concordo Totalmente: %d | %.2f%%", ctotalq4, relativaCTotalq4);
+	printf("\n- Concordo: %d | %.2f%%", concordaq4, relativaconcordaq4);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq4, relativaCParcq4);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq4, relativaDParcq4);
+	printf("\n- Discordo: %d | %.2f%%", discordaq4, relativadiscordaq4);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq4, relativaDTotalq4);
+
+	printf("\n\nQuestão 5: \n- Concordo Totalmente: %d | %.2f%%", ctotalq5, relativaCTotalq5);
+	printf("\n- Concordo: %d | %.2f%%", concordaq5, relativaconcordaq5);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq5, relativaCParcq5);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq5, relativaDParcq5);
+	printf("\n- Discordo: %d | %.2f%%", discordaq5, relativadiscordaq5);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq5, relativaDTotalq5);
+	
+	printf("\n\nQuestão 6: \n- Concordo Totalmente: %d | %.2f%%", ctotalq6, relativaCTotalq6);
+	printf("\n- Concordo: %d | %.2f%%", concordaq6, relativaconcordaq6);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq6, relativaCParcq6);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq6, relativaDParcq6);
+	printf("\n- Discordo: %d | %.2f%%", discordaq6, relativadiscordaq6);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq6, relativaDTotalq6);
+
+	printf("\n\nQuestão 7: \n- Concordo Totalmente: %d | %.2f%%", ctotalq7, relativaCTotalq7);
+	printf("\n- Concordo: %d | %.2f%%", concordaq7, relativaconcordaq7);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq7, relativaCParcq7);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq7, relativaDParcq7);
+	printf("\n- Discordo: %d | %.2f%%", discordaq7, relativadiscordaq7);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq7, relativaDTotalq7);
+
+	printf("\n\nQuestão 8: \n- Concordo Totalmente: %d | %.2f%%", ctotalq8, relativaCTotalq8);
+	printf("\n- Concordo: %d | %.2f%%", concordaq8, relativaconcordaq8);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq8, relativaCParcq8);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq8, relativaDParcq8);
+	printf("\n- Discordo: %d | %.2f%%", discordaq8, relativadiscordaq8);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq8, relativaDTotalq8);
+
+	printf("\n\nQuestão 9: \n- Concordo Totalmente: %d | %.2f%%", ctotalq9, relativaCTotalq9);
+	printf("\n- Concordo: %d | %.2f%%", concordaq9, relativaconcordaq9);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq9, relativaCParcq9);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq9, relativaDParcq9);
+	printf("\n- Discordo: %d | %.2f%%", discordaq9, relativadiscordaq9);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq9, relativaDTotalq9);
+
+	printf("\n\nQuestão 10: \n- Concordo Totalmente: %d | %.2f%%", ctotalq10, relativaCTotalq10);
+	printf("\n- Concordo: %d | %.2f%%", concordaq10, relativaconcordaq10);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq10, relativaCParcq10);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq10, relativaDParcq10);
+	printf("\n- Discordo: %d | %.2f%%", discordaq10, relativadiscordaq10);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq10, relativaDTotalq10);
+
+	printf("\n\nQuestão 11: \n- Concordo Totalmente: %d | %.2f%%", ctotalq11, relativaCTotalq11);
+	printf("\n- Concordo: %d | %.2f%%", concordaq11, relativaconcordaq11);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq11, relativaCParcq11);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq11, relativaDParcq11);
+	printf("\n- Discordo: %d | %.2f%%", discordaq11, relativadiscordaq11);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq11, relativaDTotalq11);
+
+	printf("\n\nQuestão 12: \n- Concordo Totalmente: %d | %.2f%%", ctotalq12, relativaCTotalq12);
+	printf("\n- Concordo: %d | %.2f%%", concordaq12, relativaconcordaq12);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq12, relativaCParcq12);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq12, relativaDParcq12);
+	printf("\n- Discordo: %d | %.2f%%", discordaq12, relativadiscordaq12);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq12, relativaDTotalq12);
+
+	printf("\n\nQuestão 13: \n- Concordo Totalmente: %d | %.2f%%", ctotalq13, relativaCTotalq13);
+	printf("\n- Concordo: %d | %.2f%%", concordaq13, relativaconcordaq13);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq13, relativaCParcq13);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq13, relativaDParcq13);
+	printf("\n- Discordo: %d | %.2f%%", discordaq13, relativadiscordaq13);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq13, relativaDTotalq13);
+
+	printf("\n\nQuestão 14: \n- Concordo Totalmente: %d | %.2f%%", ctotalq14, relativaCTotalq14);
+	printf("\n- Concordo: %d | %.2f%%", concordaq14, relativaconcordaq14);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq14, relativaCParcq14);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq14, relativaDParcq14);
+	printf("\n- Discordo: %d | %.2f%%", discordaq14, relativadiscordaq14);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq14, relativaDTotalq14);
+
+	printf("\n\nQuestão 15: \n- Concordo Totalmente: %d | %.2f%%", ctotalq15, relativaCTotalq15);
+	printf("\n- Concordo: %d | %.2f%%", concordaq15, relativaconcordaq15);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq15, relativaCParcq15);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq15, relativaDParcq15);
+	printf("\n- Discordo: %d | %.2f%%", discordaq15, relativadiscordaq15);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq15, relativaDTotalq15);
+
+	printf("\n\nQuestão 16: \n- Concordo Totalmente: %d | %.2f%%", ctotalq16, relativaCTotalq16);
+	printf("\n- Concordo: %d | %.2f%%", concordaq16, relativaconcordaq16);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq16, relativaCParcq16);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq16, relativaDParcq16);
+	printf("\n- Discordo: %d | %.2f%%", discordaq16, relativadiscordaq16);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq16, relativaDTotalq16);
+	
+	printf("\n\nQuestão 17: \n- Concordo Totalmente: %d | %.2f%%", ctotalq17, relativaCTotalq17);
+	printf("\n- Concordo: %d | %.2f%%", concordaq17, relativaconcordaq17);
+	printf("\n- Concordo Parcialmente: %d | %.2f%%", cparcq17, relativaCParcq17);
+	printf("\n- Discordo Parcialmente: %d | %.2f%%", dparcq17, relativaDParcq17);
+	printf("\n- Discordo: %d | %.2f%%", discordaq17, relativadiscordaq17);
+	printf("\n- Discordo Totalmente: %d | %.2f%%", dtotalq17, relativaDTotalq17);
+		
+	printf("\n\nEscores e IPA por curso: \nSubmissão a autoridade: ");
+	printf("\n Letras Vernáculas: %.2f \n História: %.2f \n Medicina: %.2f \n Engenharia Civil: %.2f", escore1Letras, escore1Historia, escore1Medicina, escore1Civil);
+	printf("\n\nAgressividade Autoritária: ");
+	printf("\n Letras Vernáculas: %.2f \n História: %.2f \n Medicina: %.2f \n Engenharia Civil: %.2f", escore2Letras, escore2Historia, escore2Medicina, escore2Civil);
+	printf("\n\nConvencionalismo: ");
+	printf("\n Letras Vernáculas: %.2f \n História: %.2f \n Medicina: %.2f \n Engenharia Civil: %.2f", escore3Letras, escore3Historia, escore3Medicina, escore3Civil);
+	printf("\n\nIndice de Propensão ao Autoritarismo: ");
+	printf("\n Letras Vernáculas: %.2f \n História: %.2f \n Medicina: %.2f \n Engenharia Civil: %.2f", ipaLetras, ipaHistoria, ipaMedicina, ipaCivil);
+	
+	printf("\n\nEscores e IPA por gênero: \nSubmissão a autoridade: ");
+	printf("\n Masculino: %.2f \n Feminino: %.2f", escore1Masc, escore1Fem);
+	printf("\n\nAgressividade Autoritária: ");
+	printf("\n Masculino: %.2f \n Feminino: %.2f", escore2Masc, escore2Fem);
+	printf("\n\nConvencionalismo: ");
+	printf("\n Masculino: %.2f \n Feminino: %.2f", escore3Masc, escore3Fem);
+	printf("\n\nIndice de Propensão ao Autoritarismo: ");
+	printf("\n Masc: %.2f \n Feminino: %.2f", ipaMasc, ipaFem);
+	
+	printf("\n\nEscores e IPA por Faixa Etária: \nSubmissão a autoridade: ");
+	printf("\n 18 à 21 anos: %.2f \n 21 à 23 anos: %.2f \n Acima de 23 anos: %.2f", escore1Faixa1, escore1Faixa2, escore1Faixa3);
+	printf("\n\nAgressividade Autoritária: ");
+	printf("\n 18 à 21 anos: %.2f \n 21 à 23 anos: %.2f \n Acima de 23 anos: %.2f", escore2Faixa1, escore2Faixa2, escore2Faixa3);
+	printf("\n\nConvencionalismo: ");
+	printf("\n 18 à 21 anos: %.2f \n 21 à 23 anos: %.2f \n Acima de 23 anos: %.2f", escore3Faixa1, escore3Faixa2, escore3Faixa3);
+	printf("\n\nIndice de Propensão ao Autoritarismo: ");
+	printf("\n 18 à 21 anos: %.2f \n 21 à 23 anos: %.2f \n Acima de 23 anos: %.2f", ipaFaixa1, ipaFaixa2, ipaFaixa3);
+	
+	printf("\n\nEscores e IPA para o total de participantes: \n\nSubmissão à autoridade: %.2f", escore1Total);
+	printf("\nAgressividade Autoritária: %.2f \nConvencionalismo: %.2f", escore2Total, escore3Total);
+	printf("\n\nIndice de Propensão ao Autoritarismo: %.2f", ipaTotal);
+	
+	return 0;
+}
