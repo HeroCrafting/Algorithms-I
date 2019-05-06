@@ -22,7 +22,7 @@ typedef struct participante{
 	//int respostas[]
 } Participante;
 
-// As descrições das funções aqui prototipadas, estão no final do código, junto com as mesmas.
+// As descrições das funções aqui prototipadas, estão no final do código, junto com o escopo das mesmas.
 
 void exibirMenu();
 
