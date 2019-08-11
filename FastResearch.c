@@ -1,532 +1,316 @@
+/*******************************************************************************
+Autor: Diego do Carmo Silva
+Componente Curricular: Algoritmos I
+Concluido em: 22/11/2018
+Declaro que este código foi elaborado por mim de forma individual e não contém nenhum
+trecho de código de outro colega ou de outro autor, tais como provindos de livros e
+apostilas, e páginas ou documentos eletrônicos da Internet. Qualquer trecho de código
+de outra autoria que não a minha está destacado com uma citação para o autor e a fonte
+do código, e estou ciente que estes trechos não serão considerados para fins de avaliação.
+******************************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
 
 
-typedef struct pergunta{
-	char enunciado[100];
-	int codEscala;	
-} Pergunta;
-
-typedef struct escala{
-	int codEscala;
-	int qtdItens;
-	char itens[1][10][255];
-} Escala;
-
-typedef struct participante{
-	char curso[25];
-	char sexo[10];
-	int idade;
-	//int respostas[]
-} Participante;
-
-// As descrições das funções aqui prototipadas, estão no final do código, junto com o escopo das mesmas.
-
-void exibirMenu();
-
-void exibirSubmenu();
-
-int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]);
-
-int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]);
-
-int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], int respostas[][100], int retorno[2]);
-
-int inicializarCursos(char cursos[][25]);
-
-void filtrarSexo(Participante participantes[], int sexo[], int qtdParticipantes, int respostas[][100], int respFem[][100], int respMasc[][100], int qtd_perguntas);
-
-void separarEscala(Escala escalas[], char stringCompleta[], int nEscala);
-
-int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]);
-
-int obterRespostas(char linha[], int respostas[][100], int nParticipante);
-
-void exibirErro(int resposta, int min, int max);
-
-void freqAbsoluta(int respostas[][100], int frequencia[], int nQuestao, int qtdItens, int qtdEntrevistados);
-
-int moda(int respostas[][100], int nQuestao, int qtdEntrevistados);
-
-float mediaAritmetica(int respostas[][100], int qtdEntrevistados, int qtdQuestoes, int nQuestao);
-
-float calcularEscore(int respostas[][100], int nQuestaoInicial, int nQuestaoFinal, int qtdEntrevistados);
-
-int main(){
-	FILE *arq_perguntas, *arq_escalas, *arq_respostas, *arq_resultados;
-	int sexo_vetor[2], resp_feminino[1000][100], resp_masculino[1000][100];
-	int respostas[1000][100], respostas_arquivo[1000][100], retorno_duplo[2], frequencia_absoluta[10], moda_vetor[10];
-	int menu, subopcao, sexo, curso, idade, compativel, resposta, limite, modaQuestao, questao_inicial, questao_final, qtd_escores;
-	int controle = 0, controle2 = 0, exito_perguntas = 0, exito_escalas = 0, exito_resultados = 0, qtd_cursos = 0, fim_entrevistas = 0, participante = 0;
-	int exito_recuperar_escalas = 0, exito_recuperar_perguntas = 0;
-	int i = 0, j = 0, k = 0;
-	float escores[50];
-	char titulo_perguntas[100], titulo_escalas[100], titulo_respostas[100], titulo_resultados[100], cursos[27][25];
-	Pergunta perguntas[100];
-	Escala escalas[10];
-	Participante participantes[1000], resultados[1000];
-	
-	setlocale(LC_ALL, "Portuguese");
+// Esta função exerce o papel de menu.
+int acessar_menu(){
+	int menu;
 	do{
-		do{
-			system("cls");
-			exibirMenu();
-			scanf("%d", &menu);
-			exibirErro(menu, 1, 4);
-		} while (menu < 1 || menu > 4);
+		system("cls");
+		printf("Bem vindo ao Fast Research, o que deseja? \n");
+		printf("[1] Aplicar Pesquisa \n[2] Preparar pesquisa \n[3] Ver resultados \n[4] Sair\n");
+		scanf("%d", &menu);
 		getchar();
-		switch(menu){
-			case 1:
-				if (exito_recuperar_perguntas == 0){
-					do {
-						printf("Digite o nome do arquivo das perguntas (utilize a extensão .txt):\n");
-						gets(titulo_perguntas);
-						// A variável exito_perguntas recebe a quantidade de perguntas lidas
-						exito_perguntas = lerPerguntas(arq_perguntas, titulo_perguntas, perguntas);
-					} while (exito_perguntas == 0);
-				
-					do{
-						printf("\nDigite o nome do arquivo das escalas (utilize a extensão .txt):\n");
-						gets(titulo_escalas);
-						// A variável exito_escalas recebe a quantidade de escalas lidas
-						exito_escalas = lerEscalas(arq_escalas, titulo_escalas, escalas);
-					} while (exito_escalas == 0);
-				}
-				else
-					participante = retorno_duplo[0];
-				// A variável qtd_cursos guarda a quantidade de cursos participantes
-				qtd_cursos = inicializarCursos(cursos);
-				break;
-			case 2:
-			do{
-				do{
-					printf("Selecione o curso do entrevistado: \n");
-					for(i = 0; i < qtd_cursos; i++){
-						printf("[%d] ", i+1);
-						puts(cursos[i]);
-					}
-					scanf("%d", &curso);
-				} while (curso < 1 || curso > qtd_cursos);
-				strcpy(participantes[participante].curso, cursos[curso-1]);
-				
-				do{
-					printf("\nQual o sexo do participante?\n[1] Masculino \n[2] Feminino\n");
-					scanf("%d", &sexo);
-					exibirErro(sexo, 1, 2);
-				} while (sexo < 1 || sexo > 2);
-				if (sexo == 1)
-					strcpy(participantes[participante].sexo, "masculino\n");
-				else
-					strcpy(participantes[participante].sexo, "feminino\n");
-					
-				do{
-					printf("\nQual a idade do entrevistado?\n");
-					scanf("%d", &idade);
-					exibirErro(idade, 0, 200);
-				} while (idade <= 0);
-				participantes[participante].idade = idade;
-				
-				for(i = 0; i < exito_perguntas; i++){
-					printf("%d)", i+1);
-					puts(perguntas[i].enunciado);
-					// No laço for a seguir, o codigo de escala da pergunta é comparado
-					// com o codigo que está vinculado às escalas, até ser encontrado o correspondente.
-					for (j = 0; j < exito_escalas; j++){
-						if (escalas[j].codEscala == perguntas[i].codEscala){
-							compativel = j;
-							j = exito_escalas;
-						}
-					}
-					for (j = 0; j < escalas[compativel].qtdItens; j++){
-						printf("[%d]", j+1);
-						puts(escalas[compativel].itens[0][j]);
-						// A variável limite guarda a opção máxima, para tratamento de erros
-						limite = j + 1;
-					}
-					do{
-						scanf("%d", &resposta);
-						exibirErro(resposta, 1, limite);
-					} while (resposta < 0 || resposta > limite);
-					respostas[participante][i] = resposta;
-				}
-				do{
-					printf("Deseja entrevistar outro candidato?\n[1] Sim \n[2] Não\n");
-					scanf("%d", &fim_entrevistas);
-					exibirErro(fim_entrevistas, 1, 2);
-					if (fim_entrevistas == 1){
-						// O contador participante, guarda a quantidade de entrevistas realizadas
-						participante++;
-					}
-				} while (fim_entrevistas < 1 || fim_entrevistas > 2);
-			} while (fim_entrevistas == 1);
-			getchar();
-			printf("Agora, vamos salvar as respostas.. \n");
-			system("pause");
-			printf("Digite o nome para o arquivo de respostas (utilize a extensão .txt): \n");
-			gets(titulo_respostas);
-			salvarRespostas(arq_respostas, participantes, titulo_respostas, exito_perguntas, participante+1, respostas);
-			break;
-		case 3:
-				do {
-					printf("Digite o nome do arquivo das perguntas (utilize a extensão .txt):\n");
-					gets(titulo_perguntas);
-					exito_recuperar_perguntas = lerPerguntas(arq_perguntas, titulo_perguntas, perguntas);
-				} while (exito_recuperar_perguntas == 0);
-				
-				do{
-					printf("\nDigite o nome do arquivo das escalas (utilize a extensão .txt):\n");
-					gets(titulo_escalas);
-					exito_recuperar_escalas = lerEscalas(arq_escalas, titulo_escalas, escalas);
-				} while (exito_recuperar_escalas == 0);
-				printf("Qual o nome do arquivo de respostas que você deseja consultar? (utilize a extensão .txt)\n");
-				gets(titulo_resultados);
-				// A variável exito_resultados recebe a quantidade de entrevistados no arquivo
-				exito_resultados = lerResultados(arq_resultados, titulo_resultados, resultados, respostas_arquivo, retorno_duplo);
-				printf("Obtido respostas de %d participantes! \n", exito_resultados);
-				system("pause");
-				do{
-					do{
-						exibirSubmenu();
-						scanf("%d", &subopcao);	
-						exibirErro(subopcao, 1, 5);
-					} while (subopcao < 1 || subopcao > 5);
-					// printf("[1] Frequência absoluta \n[2] Moda e Média por questão \n[3] Escores\n[4] Resultados categorizados");
-					switch(subopcao){
-						case 1:
-							for(i = 0; i < retorno_duplo[1]; i++){
-								printf("---Questão %d---: \n", i+1);
-								for (j = 0; j < exito_recuperar_escalas; j++){
-									if (escalas[j].codEscala == perguntas[i].codEscala){
-										compativel = j;
-										j = exito_recuperar_escalas;
-									}
-								}
-								freqAbsoluta(respostas_arquivo, frequencia_absoluta, i+1, escalas[compativel].qtdItens, retorno_duplo[0]);
-								for (j = 0; j < escalas[compativel].qtdItens; j++){
-									puts(escalas[compativel].itens[0][j]);
-									printf(" - %d\n", frequencia_absoluta[j]);
-								}
-								printf("\n");
-								system("pause");
-							}
-							break;
-						case 2:
-							printf("Moda e média das questões: \n");
-							for (i = 0; i < retorno_duplo[1]; i++){
-								printf("---Questão %d---: \n", i+1);
-								printf("Moda: %d\n", moda(respostas_arquivo, i+1, retorno_duplo[0]));
-								printf("Média: %.1f\n", mediaAritmetica(respostas_arquivo, retorno_duplo[0], retorno_duplo[1], i+1));		
-							}
-							system("pause");
-							break;
-						case 3:
-							printf("Quantos escores deseja computar?");
-							scanf("%d", &qtd_escores);
-							for (i = 0; i < qtd_escores; i++){
-								printf("Digite o numero da questão inicial para o escore %d: \n", i+1);
-								scanf("%d", &questao_inicial);
-								printf("Digite o numero da questão final para o escore %d: \n", i+1);
-								scanf("%d", &questao_final);
-								escores[i] = calcularEscore(respostas_arquivo, questao_inicial, questao_final, retorno_duplo[0]);
-							}
-							for (j = 0; j < qtd_escores; j++){
-								printf("Escore %d: %.1f \n", j+1, escores[j]);
-							}
-							system("pause");
-							break;
-						case 4:
-							filtrarSexo(resultados, sexo_vetor, retorno_duplo[0], respostas_arquivo, resp_feminino, resp_masculino, retorno_duplo[1]);
-							printf("Moda e média das questões por sexo: \n");
-							printf("Feminino: \n");
-							for (i = 0; i < retorno_duplo[1]; i++){
-								printf("---Questão %d---: \n", i+1);
-								printf("Moda: %d\n", moda(resp_feminino, i+1, sexo_vetor[0]));
-								printf("Média: %.1f\n", mediaAritmetica(resp_feminino, sexo_vetor[0], retorno_duplo[1], i+1));		
-							}
-							system("pause");
-							printf("Masculino: \n");
-							for (i = 0; i < retorno_duplo[1]; i++){
-								printf("---Questão %d---: \n", i+1);
-								printf("Moda: %d\n", moda(resp_masculino, i+1, sexo_vetor[1]));
-								printf("Média: %.1f\n", mediaAritmetica(resp_masculino, sexo_vetor[1], retorno_duplo[1], i+1));		
-							}
-							system("pause");
-							break;
-						case 5:
-							controle2 = 1;
-							break;
-						}
-					do{
-						printf("Deseja ver algum outro resultado? \n[1] Sim\n[2] Não");
-						scanf("%d", &controle2);
-						exibirErro(controle2, 1, 2);
-					} while (controle2 < 1 || controle2 > 2);
-				} while (controle2 == 1);
-				break;
-			case 4:
-				exit(1);
-				break;
-		}
-	} while (controle == 0);
+	} while (menu < 1 || menu > 4);
+	return menu;	
 }
 
-// Este procedimento, como o nome diz, exibe as opções do menu.
-void exibirMenu(){
-	printf("Bem vindo ao Fast Research, escolha a opção desejada: \n");
-	printf("[1] Preparar Pesquisa\n[2] Aplicar Pesquisa\n[3] Ver resultados/Recuperar dados\n[4] Sair\n");
+// Esta função coloca a palavra de forma adequada nas matrizes em que se faz necessário (Curso e Sexo, por exemplo)
+void padronizarString(int linha, char matriz_resposta[][11], char string[]){
+	int i, j;
+	for(i = 0; i < strlen(string); i++){
+		matriz_resposta[linha][i] = string[i];
+		j = i + 1;
+	}
+	matriz_resposta[linha][j] = 0;
 }
-
-void exibirSubmenu(){
-	// escores individuais // media e moda individuais // resultados categorizados
-	system("cls");
-	printf("Escolha que tipo de resultados deseja ver: \n");
-	printf("[1] Frequência absoluta \n[2] Moda e Média por questão \n[3] Escores\n[4] Resultados categorizados\n[5] Voltar\n");
-}
-
-// Esta função lê as perguntas do arquivo
-int lerPerguntas(FILE *arqPerguntas, char titulo[], Pergunta perguntas[]){
-	int posicao = 0;
-	arqPerguntas = fopen(titulo, "r");
-	if (arqPerguntas == NULL){
-		printf("Erro ao abrir o arquivo! Tente novamente... \n");
+// Esta função é uma solução rápida para um bug que tive
+int correcao(int num){
+	if (num < 0){
 		return 0;
 	}
-	else{
-		while(!feof(arqPerguntas)){
-			fgets(perguntas[posicao].enunciado, 100, arqPerguntas);
-			fscanf(arqPerguntas, "%d\n", &perguntas[posicao].codEscala);
-			posicao++;
-		}
-		return posicao;
-	}	
-}
-
-// Esta função, lê as escalas do arquivo
-int lerEscalas(FILE *arqEscalas, char titulo[], Escala escalas[]){
-	int posicao = 0;
-	char escalas_agrupadas[100];
-	arqEscalas = fopen(titulo, "r");
-	if (arqEscalas == NULL){
-		printf("Erro ao abrir o arquivo! Tente novamente... \n");
-		return 0;
+	else if (num == 0){
+		return 1;
 	}
-	else {
-		while(!feof(arqEscalas)){
-			fscanf(arqEscalas, "%d\n", &escalas[posicao].codEscala);
-			fscanf(arqEscalas, "%d\n", &escalas[posicao].qtdItens);
-			fgets(escalas_agrupadas, 100, arqEscalas);
-			separarEscala(escalas, escalas_agrupadas, posicao);
-			posicao++;
+	else
+		return num;
+}
+// Esta função zera os campos de uma matriz de inteiros
+void zerarMatriz(int matriz[1000][100]){
+	int i, j;
+	for (i = 0; i < 1000; i++){
+		for(j = 0; j < 100; j++){
+			matriz[i][j] = 0;
 		}
-		fclose(arqEscalas);
-		return posicao;
 	}
 }
-
-//Este procedimento recupera as respostas escritas no arquivo
-int lerResultados(FILE *arqResultado, char titulo[], Participante resultados[], int respostas[][100], int retorno[2]){
-	int i = 0;
-	char linha_respostas[202];
-	arqResultado = fopen(titulo, "r");
-	if (arqResultado == NULL){
-		printf("Não foi possível abrir o arquivo, tente novamente!\n");
-		return 0;
-	}
-	else{
-		while(!feof(arqResultado)){
-			fgets(resultados[i].curso, 100, arqResultado);
-			fgets(resultados[i].sexo, 100, arqResultado);
-			fscanf(arqResultado, "%d\n", &resultados[i].idade);
-			fgets(linha_respostas, 202, arqResultado);
-			retorno[1] = obterRespostas(linha_respostas, respostas, i);
-			i++;
+// Esta função zera os campos de um vetor
+void zerarVetor(int vetor[100]){
+	int j;
+	for(j = 0; j < 100; j++){
+			vetor[j] = 0;
 		}
-		retorno[0] = i;
-		fclose(arqResultado);
-		return i;
-	}
 }
 
-// Este procedimento separa os itens da escala
-void separarEscala(Escala escalas[], char stringCompleta[], int nEscala){
-	int i = 0, j = 0, nItem = 0;
-	while (stringCompleta[i] != 0){
-		if (stringCompleta[i] == ','){
-			escalas[nEscala].itens[0][nItem][j] = 0;
-			j = 0;
-			nItem++;
-		}
-		else{
-			escalas[nEscala].itens[0][nItem][j] = stringCompleta[i];
-			j++;
-		}
-		i++;
-	}
-}
-
-// Este procedimento exibe uma mensagem de erro para respostas fora do intervalo definido
-void exibirErro(int resposta, int min, int max){
-	if (resposta < min || resposta > max){
-		printf("Digite uma resposta válida!\n");
-		system("pause");
-	}
-}
-
-void filtrarSexo(Participante participantes[], int sexo[], int qtdParticipantes, int respostas[][100], int respFem[][100], int respMasc[][100], int qtd_perguntas){
-	int i = 0, j = 0, feminino = 0, masculino = 0;
-	for (i = 0; i < qtdParticipantes; i++){
-		if (strcmp(participantes[i].sexo, "feminino\n") == 0){
-			for (j = 0; j < qtd_perguntas; j++){
-				respFem[feminino][j] = respostas[i][j];
-			}
-			feminino++;
-			printf("%d\n", feminino);
-		}
-		else{
-			for (j = 0; j < qtd_perguntas; j++){
-				respMasc[masculino][j] = respostas[i][j];
-			}
-			masculino++;
-			printf("%d\n", masculino);
+//Esta função calcula a frequência absoluta e a moda
+int freqAbsoluta(int linhas, int colunas, int respostas[1000][100], int freq[1000][100], int mod[1000][100]){
+	int i, j, maior = 0, posicao;
+	for (i = 0; i < colunas; i++){
+		for (j = 0; j < linhas; j++){
+			if (respostas[j][i] == i + 1){
+				freq[j][i]++;
+				mod[j][i]++;
+			}	
 		}
 	}
-	sexo[0] = feminino;
-	sexo[1] = masculino;
-}
-// Esta função, salva as respostas em um arquivo de texto
-int salvarRespostas(FILE *arqRespostas, Participante participantes[], char titulo[], int qtd_perguntas, int qtd_participantes, int respostas[][100]){
-	int i = 0, j = 0;
-	arqRespostas = fopen(titulo, "a");
-	if (arqRespostas == NULL){
-		printf("Erro ao abrir o arquivo! Tente novamente. \n");
-		return 0;
-	}
-	else{
-		for(i = 0; i < qtd_participantes; i++){
-			if (i > 0){
-				fprintf(arqRespostas, "\n");
-			}
-			fputs(participantes[i].curso, arqRespostas);
-			fprintf(arqRespostas, "\n");
-			fputs(participantes[i].sexo, arqRespostas);
-			fprintf(arqRespostas, "%d\n", participantes[i].idade);
-			for (j = 0; j < qtd_perguntas; j++){
-				fprintf(arqRespostas, "%d ", respostas[i][j]);
-			}
-		}
-		fclose(arqRespostas);
-		return i;
-	}
-}
-
-int obterRespostas(char linha[], int respostas[][100], int nParticipante){
-	int i = 0, j = 0;
-	while (linha[i] != 0){
-		if (linha[i] != ' '){
-			respostas[nParticipante][j] = linha[i] - '0';
-			j++;
-		}
-		i++;
-	}
-	return j;
-}
-
-int inicializarCursos(char cursos[][25]){
-	int finalizado = 0, i = 0, j = 0, selecionado;
-	char lista_cursos[27][25] = {"Administraçao", "Agronomia", "Ciencias Biologicas", "Ciencias Contabeis", "Ciencias Economicas", "Direito",
-	"Educaçao Fisica", "Enfermagem", "Engenharia Civil", "Engenharia de Alimentos", "Engenharia da Computaçao", "Farmacia",
-	"Fisica", "Filosofia", "Geografia", "Historia", "Letras Vernaculas", "Letras c/ Espanhol", "Letras c/ Ingles", 
-	"Letras c/ Frances", "Matematica", "Medicina", "Musica", "Odontologia", "Pedagogia", "Psicologia", "Quimica"};
-	printf("Selecione os cursos que deseja que participem da pesquisa: \n");
-	do{
-		for (i = 0; i < 27; i++){
-			printf("%d)", i + 1);
-			puts(lista_cursos[i]);			
-		}
-		do{
-			scanf("%d", &selecionado);
-			exibirErro(selecionado, 1, 27);
-		} while (selecionado < 1 || selecionado > 27);
-		if(strcmp(lista_cursos[selecionado - 1], "SELECIONADO") != 0){
-			strcpy(cursos[j], lista_cursos[selecionado - 1]);
-			j++;
-			strcpy(lista_cursos[selecionado - 1], "SELECIONADO");
-		}
-		do{
-			printf("Deseja adicionar mais cursos?\n[1] Sim\n[2] Não \n");
-			scanf("%d", &finalizado);
-			exibirErro(finalizado, 1, 2);
-		} while (finalizado < 1 || finalizado > 2);
-	} while (finalizado == 1);
-	return j;
-}
-
-// Funções de cálculos
-
-// Este procedimento calcula a frequência absoluta por questão
-void freqAbsoluta(int respostas[][100], int frequencia[], int nQuestao, int qtdItens, int qtdEntrevistados){
-	int i = 0, valorCelula;
-	// O primeiro for é para zerar o vetor
-	for(i = 0; i < 10; i++){
-		frequencia[i] = 0;
-	}
-	
-	for (i = 0; i < qtdEntrevistados; i++){
-		valorCelula = respostas[i][nQuestao - 1];
-		frequencia[valorCelula - 1]++;
-	}
-}
-
-// Esta função calcula a moda de cada questão
-int moda(int respostas[][100], int nQuestao, int qtdEntrevistados){
-	int i = 0, valorCelula, maior = 0, posicao = 0, moda[10];
-	// O primeiro for é para zerar o vetor
-	for(i = 0; i < 10; i++){
-		moda[i] = 0;
-	}
-	
-	for(i = 0; i < qtdEntrevistados; i++){
-		valorCelula = respostas[i][nQuestao - 1];
-		moda[valorCelula - 1]++;
-	}
-	
-	for (i = 0; i < 10; i++){
-		if(moda[i] > maior){
-			maior = moda[i];
+	for (i = 0; i < 100; i++){
+		if (mod[i] > maior){
+			maior = mod[i];
 			posicao = i;
 		}
 	}
+	return posicao;
+}
+
+int main() {
+	// ponteiros para os arquivos perguntas, respostas e escalas
+	FILE *quest, *resp, *esc, *arq_respostas;
+	char *exibir, questExibir[100], perguntas[100][100];
+	char escalas[15][15][255], escalas_conjunto[100][100];
+	char titulo[30], nome[55], cursos[29], resposta_sexo[1000][11];
+	char titulo_resp[30], nome_curso[29][25], arq_resp[25], sexo_recupera[1000][11], idade_recupera[1000], curso_recupera[29][50], resposta_recupera[1000][100];
+	int *cod_escala_vetor[100], cod_escala_arquivo[100], qtd_itens_escala[100], resposta_curso[1000], resposta_idade[1000], respostas_geral[1000][100];
+	int freqAbsoluta_matriz[1000][100], moda[1000][100];
+	int a = 0, b = 0, c = 0, d = 0, i = 0, j = 0, k = 0, l = 0, m = 0, n = 0, p = 0, x = 0, y = 0, z = 0;
+	int controle = 1, preparacao = 0, relacao, finalizar = 0, limite, entrevistado = 0, sexo, idade, curso;
+	int menu, resposta, questoes = 0, cod_escala, qtd_curso, moda_num;
 	
-	return posicao + 1;
-}
+	setlocale (LC_ALL, "Portuguese");
+	zerarMatriz(respostas_geral);
+	zerarMatriz(freqAbsoluta_matriz);
+	zerarMatriz(moda);
+	do{
+		switch(acessar_menu()){
+			case 1:
+				if (preparacao == 0){
+					printf("Primeiramente, prepare a pesquisa!\n");
+				}
+				else {
+					printf("Escolha o nome para o seu arquivo de respostas: (Não esqueça o .txt!) \n");
+					gets(titulo_resp);
+					resp = fopen(titulo_resp, "w");
+					do{
+						// Obtenção do sexo do entrevistado
+						do{
+							printf("Qual o sexo do entrevistado?\n[1] Masculino\n[2] Feminino");
+							scanf("%d", &sexo);
+						} while (sexo < 1 || sexo > 2);
+						if (sexo == 1){
+							padronizarString(entrevistado, resposta_sexo, "masculino\n");
+						}
+						else
+							padronizarString(entrevistado, resposta_sexo, "feminino\n");
+						fputs(resposta_sexo[entrevistado], resp);
+						
+						// Obtenção do curso do entrevistado
+						do{
+							printf("Qual o curso? \n");
+							for(i = 0; i < qtd_curso; i++){
+								printf("[%d] %s \n", i + 1, nome_curso[i]);
+							}
+							scanf("%d", &curso);
+						} while (curso > qtd_curso);
+						resposta_curso[entrevistado] = curso;
+						fputs(nome_curso[resposta_curso[entrevistado] - 1], resp);
 
-// Esta função calcula a media aritmética de cada questão
-float mediaAritmetica(int respostas[][100], int qtdEntrevistados, int qtdQuestoes, int nQuestao){
-	int i = 0, j = 0;
-	float media = 0;
-	for (i = 0; i < qtdEntrevistados; i++){
-		media = media + respostas[i][nQuestao - 1];
-	}
-	media = (float)media/qtdEntrevistados;
-	return media;
-}
-
-float calcularEscore(int respostas[][100], int nQuestaoInicial, int nQuestaoFinal, int qtdEntrevistados){
-	int i = 0, j = 0, divisor;
-	float escore = 0;
-	if (nQuestaoInicial == 1)
-		divisor = nQuestaoFinal;
-	else
-		divisor = nQuestaoFinal - nQuestaoInicial;
-		
-	for (i = 0; i < qtdEntrevistados; i++){
-		for (j = nQuestaoInicial - 1; j < nQuestaoFinal; j++){
-			escore = escore + respostas[i][j];
+						// Obtenção da idade do entrevistado
+						do{
+							printf("Qual a idade do entrevistado? \n");
+							scanf("%d", &idade);
+						}while (idade <= 0);
+						resposta_idade[entrevistado] = idade;
+						fputs("\n", resp);
+						fprintf(resp, "%d \n", idade);
+												
+						// Aqui começa a exibição das perguntas
+						for(i = 0; i < questoes; i++){
+							do {
+							printf("%d) %s \n", i + 1, perguntas[i]);
+							// Relação entre o código e a escala
+							for(k = 0; k <= questoes; k++){
+								if (cod_escala_vetor[i] == cod_escala_arquivo[k]){
+									//relacao = k - 1;
+									relacao = correcao(k - 1);
+									k = questoes + 1;
+								}
+							}
+								for(j = 0; j < qtd_itens_escala[relacao]; j++){
+									printf("[%d] %s \n", j + 1, escalas[relacao][j]);
+									limite = j + 1;
+								}
+								scanf("%d", &resposta);
+								if (resposta < 0 || resposta > limite){
+									printf("Digite uma resposta no intervalo! \n");
+								}
+								respostas_geral[entrevistado][i] = resposta;
+							} while ( resposta < 1 || resposta > limite);	
+							fprintf(resp, "%d ", respostas_geral[entrevistado][i]);						
+						}
+						fputs("\n", resp);
+						entrevistado++;
+						do{
+						printf("Deseja entrevistar outra pessoa? \n[0] Sim\n[1] Não");
+						scanf("%d", &finalizar);
+						}while (finalizar < 0 || finalizar > 1);
+					} while (finalizar == 0);
+					fclose(resp);
+				}
+				break;
+			case 2:
+				printf("Digite o título da pesquisa (nome_do_arquivo.txt): \n");
+				gets(titulo);
+				quest = fopen(titulo, "r");
+				if (quest == NULL){
+					printf("Erro ao abrir ao arquivo, verifique e tente novamente! \n");
+					system("pause");
+					preparacao = 0;
+					controle = 0;
+					break;
+				}
+				else{
+					while(!feof(quest)){
+						fgets(perguntas[a], sizeof(perguntas[a]), quest);
+						for(i = 0; i < strlen(perguntas[a]); i++){
+							if (perguntas[a][i] == '\n'){
+								perguntas[a][i] = 0;
+							}
+						}
+						a++;
+						fscanf(quest, "%d\n", &cod_escala_vetor[b]);
+						b++;
+						questoes++;
+					}
+					fclose(quest);
+				}
+				printf("Qual o nome do arquivo das escalas? Siga o padrao nome_do_arquivo.txt. \n");
+				gets(titulo);
+				esc = fopen(titulo, "r");
+				if (esc == NULL){
+					printf("Erro ao abrir ao arquivo, verifique e tente novamente! \n");
+					system("pause");
+					controle = 0;
+					break;
+				}
+				else{
+					while(!feof(esc)){
+						fscanf(esc, "%d\n", &cod_escala_arquivo[x]);
+						x++;
+						fscanf(esc, "%d\n", &qtd_itens_escala[y]);
+						y++;
+						fgets(escalas_conjunto[z], sizeof(escalas_conjunto[z]), esc);
+						//organizarEscalas(escalas_conjunto, escalas);
+						for(i = 0; i < strlen(escalas_conjunto[z]); i++){
+							if (escalas_conjunto[z][i] == '\n'){
+								escalas[j][k][l] = 0;
+								l = 0;
+								k = 0;
+								j++;
+							}
+							else if (escalas_conjunto[z][i] == ','){
+								escalas[j][k][l] = 0;
+								l = 0;
+								k++;
+							}
+							else{
+								escalas[j][k][l] = escalas_conjunto[z][i];
+								l++;
+							}
+						}
+					}
+				}
+				printf("Quantos cursos você deseja entrevistar? \n");
+				scanf("%d", &qtd_curso);
+				getchar();
+				for (i = 0; i < qtd_curso; i++){
+					printf("Digite o nome do %dº curso: \n", i+1);
+					gets(nome_curso[i]);
+				}
+				preparacao = 1;
+				printf("Pesquisa criada com sucesso!\n");
+				system("pause");
+				controle = 0;
+				fclose(esc);
+				break;
+			case 3:
+				printf("Digite o nome do seu arquivo de respostas: \n");
+				gets(arq_resp);
+				arq_respostas = fopen(arq_resp, "r");
+				if (esc == NULL){
+					printf("Erro ao abrir ao arquivo, verifique e tente novamente! \n");
+					system("pause");
+					controle = 0;
+					break;
+				}
+				else{
+					while(!feof(arq_respostas)){
+						fgets(sexo_recupera[m], sizeof(sexo_recupera[m]), arq_respostas);
+						for(i = 0; i < strlen(perguntas[a]); i++){
+							if (sexo_recupera[m][i] == '\n'){
+								sexo_recupera[m][i] = 0;
+							}
+						}
+						fgets(curso_recupera[n], sizeof(curso_recupera[n]), arq_respostas);
+						for(i = 0; i < strlen(perguntas[a]); i++){
+							if (curso_recupera[m][i] == '\n'){
+								curso_recupera[m][i] = 0;
+							}
+						}
+						m++;
+						n++;
+						fscanf(arq_respostas, "%d\n", idade_recupera[p]);
+						p++;
+						/*fgets(resposta_recupera[c], sizeof(resposta_recupera[c]), arq_respostas);
+						for(i = 0; i < strlen(resposta_recupera[c]); i++){
+							if (resposta_recupera[c][i] == '\n'){
+								i = strlen(resposta_recupera[c]);
+							}
+							else{
+								
+							}*/
+					}	
+					printf("Estatísticas: \n");
+					moda_num = freqAbsoluta(entrevistado, questoes, respostas_geral, freqAbsoluta_matriz, moda);
+					printf("O valor da moda é: %d \n", moda[moda_num]);
+					for (i = 0; i < questoes; i++){
+						for (j = 0; j < qtd_itens_escala[i]; j++){
+							printf("Frequencia Absoluta: \nQ%d) Item%d: %d\n", i + 1, j + 1, freqAbsoluta_matriz[j][i]);
+						}
+				}
+				controle = 1;
+				}
+				fclose(arq_respostas);
+				break;
+			case 4:
+				printf("Obrigado por utilizar o Fast Research!");
+				exit(0);
 		}
-	}
-	escore = (float)escore/divisor;
-	return escore;
+ 	system("pause");
+	} while(controle == 0); // A variável controle, auxilia na "volta" ao menu, em casos necessários.
+	printf("%s", &escalas[0][10]);
+	printf("\nFinal");
+	return 0;
 }
 
